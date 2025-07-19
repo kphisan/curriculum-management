@@ -1,1308 +1,1524 @@
 <!DOCTYPE html>
 <html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <title>Curriculum Planner + Master Category + Master TABEE</title>
-  <style>
-    body { font-family: sans-serif; background: #f0f2f5; margin: 20px; }
-    .tab-btn { padding:8px 20px; background:#eee; border:none; border-radius:8px 8px 0 0; margin-right:8px; cursor:pointer; font-weight:bold;}
-    .tab-btn.active { background: #1976d2; color:#fff; }
-    .tab-section { display:none; background:#fff; border-radius:0 0 10px 10px; box-shadow:0 2px 10px #0001; padding:24px;}
-    .tab-section.active { display:block; }
-    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
-    .year-label { font-weight: bold; margin: 20px 0 5px; }
-    .semester, .subject-pool {
-      background: #fff; padding: 10px; border-radius: 8px;
-      border: 2px solid #ccc; min-height: 100px; transition: background 0.2s;
-    }
-    .semester.drag-over, .subject-pool.drag-over { background: #e0f7fa; }
-    .item {
-      background: #aed581; padding: 6px 10px; margin: 4px; border-radius: 4px;
-      cursor: grab; display: inline-block; font-size: 0.85rem; white-space: nowrap; position: relative;
-    }
-    .item[data-code]:hover::after {
-      content: attr(data-tooltip);
-      position: absolute; background: #333; color: #fff;
-      font-size: 0.75rem; padding: 5px 8px; border-radius: 4px;
-      white-space: pre-wrap; z-index: 1000; transform: translateY(100%); left: 0; min-width: 200px;
-    }
-    .item button { margin-left: 4px; font-size: 0.75rem; }
-    #subject-pool-wrapper { display: flex; flex-direction: column; margin-bottom: 30px; }
-    #subject-pool-header {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;
-    }
-    #subject-pool { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; }
-    #add-subject-btn, #add-multi-btn, #add-fullmulti-btn {
-      padding: 6px 12px; background-color: #64b5f6; color: white;
-      border: none; border-radius: 4px; cursor: pointer;
-    }
-    #add-multi-btn { margin-left: 10px; background-color: #00bcd4; }
-    #add-multi-btn:hover { background-color: #0097a7; }
-    #add-fullmulti-btn { margin-left: 10px; background-color: #ffb300; color: #212121; }
-    #add-fullmulti-btn:hover { background-color: #ff9800; }
-    #add-subject-btn:hover { background-color: #42a5f5; }
-    #json-modal, #subject-edit-modal, #add-multi-modal, #add-fullmulti-modal, #category-modal, #tabee-modal {
-      display:none; position:fixed; top:12%; left:50%; transform:translateX(-50%);
-      background:#fff; border:2px solid #999; padding:20px; border-radius:10px; z-index:1000; width:95%; max-width:700px;
-    }
-    #cat-toolbox, #tabee-toolbox { margin-bottom: 10px; }
-    #cat-tree ul, #tabee-tree ul { margin-left:1.2em; }
-    #cat-tree li, #tabee-tree li { margin-bottom: 4px; background: #f7fafd; border-radius: 6px; padding: 2px 6px 2px 2px; transition: background .2s; }
-    #cat-tree li.drag-over, #tabee-tree li.drag-over { background: #e0f7fa !important; }
-    #cat-tree button, #tabee-tree button { margin-left:4px; font-size:0.8em; }
-    .cat-color-block, .tabee-color-block { display:inline-block; width:18px; height:18px; border-radius:5px; margin-right:4px; vertical-align:middle; border:1.5px solid #888; }
-    .cat-desc, .tabee-desc { color:#777; font-size:0.92em; }
-  </style>
-  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-</head>
-<body>
-<div>
-  <button class="tab-btn active" onclick="showTab('curriculum')">📚 แผนการสอน</button>
-  <button class="tab-btn" onclick="showTab('category')">🗂 Master หมวดหมู่</button>
-  <button class="tab-btn" onclick="showTab('tabee')">🌲 Master TABEE</button>
-</div>
-<div id="curriculum-tab" class="tab-section active">
-  <h1>แผนการสอน 8 ภาคการศึกษา (Drag & Drop)</h1>
-  <div id="subject-pool-wrapper">
-    <div id="subject-pool-header">
-      <h3 style="margin:0;">กล่องพักวิชา (ลากวิชามาจากที่นี่)</h3>
-      <div>
-        <button id="add-subject-btn">➕ เพิ่มวิชา</button>
-        <button id="add-multi-btn" style="margin-left:10px;">➕➕ เพิ่มหลายวิชาแบบย่อ</button>
-        <button id="add-fullmulti-btn" style="margin-left:10px; background:#ffb300;">➕➕ เพิ่มหลายวิชาแบบเต็ม</button>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Curriculum Planner + Master Category + Master TABEE</title>
+    <style>
+          body { font-family: sans-serif; background: #f0f2f5; margin: 20px; }
+          .tab-btn { padding:8px 20px; background:#eee; border:none; border-radius:8px 8px 0 0; margin-right:8px; cursor:pointer; font-weight:bold;}
+          .tab-btn.active { background: #1976d2; color:#fff; }
+          .tab-section { display:none; background:#fff; border-radius:0 0 10px 10px; box-shadow:0 2px 10px #0001; padding:24px;}
+          .tab-section.active { display:block; }
+          .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
+          .year-label { font-weight: bold; margin: 20px 0 5px; }
+      .semester {
+        background: #fff; padding: 10px; border-radius: 8px;
+        border: 2px solid #ccc; min-height: 100px; transition: background 0.2s;
+        display: flex;             /* <-- เพิ่มใหม่ */
+        flex-direction: column;    /* <-- เพิ่มใหม่ */
+      }
+
+      .subject-pool {
+        background: #fff; padding: 10px; border-radius: 8px;
+        border: 2px solid #ccc; min-height: 100px; transition: background 0.2s;
+      }
+
+          .semester.drag-over, .subject-pool.drag-over { background: #e0f7fa; }
+      .item {
+        background: #aed581; padding: 6px 10px; margin: 4px 0; border-radius: 4px; /* <-- ปรับ margin */
+        cursor: grab; display: block; font-size: 0.85rem; position: relative;     /* <-- เปลี่ยนจาก inline-block เป็น block */
+      }
+
+      .item[data-code]:hover::after {
+        content: attr(data-tooltip);
+        position: absolute; background: #333; color: #fff;
+        font-size: 0.75rem; padding: 5px 8px; border-radius: 4px;
+        white-space: pre-wrap; z-index: 1000;
+        bottom: 100%;     /* tooltip อยู่เหนือรายการ */
+        left: 0;          /* ชิดซ้าย */
+        margin-bottom: 3px; /* ระยะห่างด้านล่าง 3px */
+        min-width: 200px;
+      }
+
+          .item button { margin-left: 4px; font-size: 0.75rem; }
+          #subject-pool-wrapper { display: flex; flex-direction: column; margin-bottom: 30px; }
+          #subject-pool-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;
+          }
+          #subject-pool { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; }
+          #add-subject-btn, #add-multi-btn, #add-fullmulti-btn {
+            padding: 6px 12px; background-color: #64b5f6; color: white;
+            border: none; border-radius: 4px; cursor: pointer;
+          }
+          #add-multi-btn { margin-left: 10px; background-color: #00bcd4; }
+          #add-multi-btn:hover { background-color: #0097a7; }
+          #add-fullmulti-btn { margin-left: 10px; background-color: #ffb300; color: #212121; }
+          #add-fullmulti-btn:hover { background-color: #ff9800; }
+          #add-subject-btn:hover { background-color: #42a5f5; }
+          #json-modal, #subject-edit-modal, #add-multi-modal, #add-fullmulti-modal, #category-modal, #tabee-modal {
+            display:none; position:fixed; top:12%; left:50%; transform:translateX(-50%);
+            background:#fff; border:2px solid #999; padding:20px; border-radius:10px; z-index:1000; width:95%; max-width:700px;
+          }
+          #cat-toolbox, #tabee-toolbox { margin-bottom: 10px; }
+          #cat-tree ul, #tabee-tree ul { margin-left:1.2em; }
+          #cat-tree li, #tabee-tree li { margin-bottom: 4px; background: #f7fafd; border-radius: 6px; padding: 2px 6px 2px 2px; transition: background .2s; }
+          #cat-tree li.drag-over, #tabee-tree li.drag-over { background: #e0f7fa !important; }
+          #cat-tree button, #tabee-tree button { margin-left:4px; font-size:0.8em; }
+          .cat-color-block, .tabee-color-block { display:inline-block; width:18px; height:18px; border-radius:5px; margin-right:4px; vertical-align:middle; border:1.5px solid #888; }
+          .cat-desc, .tabee-desc { color:#777; font-size:0.92em; }
+    </style>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <button class="tab-btn active" onclick="showTab('curriculum')">
+        📚 แผนการสอน
+      </button>
+      <button class="tab-btn" onclick="showTab('category')">
+        🗂 Master หมวดหมู่
+      </button>
+      <button class="tab-btn" onclick="showTab('tabee')">
+        🌲 Master TABEE
+      </button>
+    </div>
+    <div id="curriculum-tab" class="tab-section active">
+      <h1>แผนการสอน 8 ภาคการศึกษา (Drag & Drop)</h1>
+      <div id="subject-pool-wrapper">
+        <div id="subject-pool-header">
+          <h3 style="margin:0;">กล่องพักวิชา (ลากวิชามาจากที่นี่)</h3>
+          <div>
+            <button id="add-subject-btn">➕ เพิ่มวิชา</button>
+            <button id="add-multi-btn" style="margin-left:10px;">
+              ➕➕ เพิ่มหลายวิชาแบบย่อ
+            </button>
+            <button
+              id="add-fullmulti-btn"
+              style="margin-left:10px; background:#ffb300;"
+            >
+              ➕➕ เพิ่มหลายวิชาแบบเต็ม
+            </button>
+          </div>
+        </div>
+        <div id="subject-pool" class="subject-pool"></div>
+      </div>
+      <div id="planner"></div>
+    </div>
+    <div id="category-tab" class="tab-section">
+      <div id="cat-toolbox">
+        <button onclick="showCategoryModal(null)">➕ เพิ่มหมวดหมู่หลัก</button>
+      </div>
+      <ul id="cat-tree"></ul>
+    </div>
+    <div id="tabee-tab" class="tab-section">
+      <div id="tabee-toolbox">
+        <button onclick="showTabeeModal(null)">➕ เพิ่ม TABEE หลัก</button>
+      </div>
+      <ul id="tabee-tree"></ul>
+    </div>
+    <!-- Modal: Category add/edit -->
+    <div id="category-modal">
+      <h3 id="cat-modal-title"></h3>
+      <label>เลขหมวด: <input type="text" id="cat-code" /></label><br /><br />
+      <label>ชื่อหมวด: <input type="text" id="cat-name" /></label><br /><br />
+      <label
+        >คำอธิบาย:<br /><textarea
+          id="cat-desc"
+          rows="2"
+          style="width:100%;"
+        ></textarea></label
+      ><br /><br />
+      <label
+        >สีหมวด: <input type="color" id="cat-color" value="#2196f3" /></label
+      ><br /><br />
+      <button onclick="saveCategoryModal()">💾 บันทึก</button>
+      <button onclick="closeCategoryModal()">❌ ยกเลิก</button>
+    </div>
+    <!-- Modal: TABEE add/edit -->
+    <div id="tabee-modal">
+      <h3 id="tabee-modal-title"></h3>
+      <label>เลข TABEE: <input type="text" id="tabee-code" /></label
+      ><br /><br />
+      <label>ชื่อ TABEE: <input type="text" id="tabee-name" /></label
+      ><br /><br />
+      <label
+        >คำอธิบาย:<br /><textarea
+          id="tabee-desc"
+          rows="2"
+          style="width:100%;"
+        ></textarea></label
+      ><br /><br />
+      <label
+        >สี TABEE:
+        <input type="color" id="tabee-color" value="#43a047" /></label
+      ><br /><br />
+      <button onclick="saveTabeeModal()">💾 บันทึก</button>
+      <button onclick="closeTabeeModal()">❌ ยกเลิก</button>
+    </div>
+    <!-- Modals อื่นๆ เดิม (multi, fullmulti, json, edit subject) -->
+    <div id="add-multi-modal">
+      <h3>เพิ่มหลายวิชาแบบย่อ</h3>
+      <textarea
+        id="multi-input"
+        style="width:100%; height:120px;"
+        placeholder="CN101 3&#10;CN102 1.5"
+      ></textarea>
+      <br />
+      <button onclick="submitMulti()">✅ เพิ่ม</button>
+      <button onclick="closeMulti()">❌ ยกเลิก</button>
+    </div>
+    <div id="add-fullmulti-modal">
+      <h3>เพิ่มหลายวิชาแบบเต็ม (แยก field ด้วย , ใส่ข้อความใน "")</h3>
+      <div style="font-size:0.95em;color:#666;margin-bottom:8px;">
+        ตัวอย่าง:<br />
+        <code>
+          "CN201","วศ201","Programming II","การเขียนโปรแกรม
+          2",3,"CN101","1.1.1","เรียนต่อเนื่องจาก Programming I"<br />
+          "CN301","","Data
+          Science","วิทยาศาสตร์ข้อมูล",3,"CN201|MA102","1.2.3","ศึกษาวิธีใช้ข้อมูลในการวิเคราะห์"
+        </code>
+      </div>
+      <textarea
+        id="fullmulti-input"
+        style="width:100%; height:120px;"
+        placeholder="..."
+      ></textarea>
+      <br />
+      <button onclick="submitFullMulti()">✅ เพิ่ม</button>
+      <button onclick="closeFullMulti()">❌ ยกเลิก</button>
+    </div>
+    <div id="json-modal">
+      <h3 id="json-modal-title">Export/Import JSON</h3>
+      <textarea id="json-text" style="width:100%; height:200px;"></textarea>
+      <br />
+      <button onclick="applyImport()">📥 นำเข้า</button>
+      <button onclick="closeJsonModal()">❌ ปิด</button>
+      <button
+        onclick="saveJsonToFile()"
+        style="background:#388e3c;color:white;margin:7px 7px 7px 0;"
+      >
+        💾 Save to file
+      </button>
+      <input
+        type="file"
+        id="json-file-input"
+        accept=".json"
+        style="display:none"
+        onchange="loadJsonFromFile(this)"
+      />
+      <button
+        onclick="document.getElementById('json-file-input').click()"
+        style="background:#1976d2;color:white;margin:7px 7px 7px 0;"
+      >
+        📂 Load from file
+      </button>
+    </div>
+    <div id="subject-edit-modal">
+      <h3>📝 แก้ไขรายวิชา</h3>
+      <form id="edit-subject-form">
+        <label>รหัสวิชา (EN): <input type="text" id="edit-code-en" /></label
+        ><br /><br />
+        <label>รหัสวิชา (TH): <input type="text" id="edit-code-th" /></label
+        ><br /><br />
+        <label>ชื่อวิชา (EN): <input type="text" id="edit-name-en" /></label
+        ><br /><br />
+        <label>ชื่อวิชา (TH): <input type="text" id="edit-name-th" /></label
+        ><br /><br />
+        <label
+          >หน่วยกิต:
+          <input type="number" id="edit-credit" min="0" step="0.5" /></label
+        ><br /><br />
+        <label
+          >วิชาบังคับก่อน (รหัส EN คั่นด้วย ,):<br /><input
+            type="text"
+            id="edit-prereq" /></label
+        ><br /><br />
+        <label
+          >หมวดหมู่:
+          <input type="text" id="edit-category" placeholder="1.1.1" /></label
+        ><br /><br />
+        <label
+          >หมวด TABEE:
+          <input type="text" id="edit-tabee" placeholder="A1" /></label
+        ><br /><br />
+        <label
+          >คำอธิบายภาษาไทย:<br />
+          <textarea
+            id="edit-description-th"
+            rows="2"
+            style="width:100%;"
+          ></textarea></label
+        ><br /><br />
+        <label
+          >คำอธิบายภาษาอังกฤษ:<br />
+          <textarea
+            id="edit-description-en"
+            rows="2"
+            style="width:100%;"
+          ></textarea></label
+        ><br /><br />
+        <button type="submit">💾 บันทึก</button>
+        <button type="button" onclick="closeEditModal()">❌ ยกเลิก</button>
+      </form>
+    </div>
+    <div style="position: fixed; bottom: 20px; right: 20px;">
+      <button onclick="exportAll()" style="margin-right:10px;">
+        📤 ส่งออก JSON
+      </button>
+      <button onclick="showImport()" style="margin-right:10px;">
+        📥 นำเข้า JSON
+      </button>
+      <button
+        onclick="showStudyPlanChart()"
+        style="background:#1976d2;color:white;margin-right:10px;"
+      >
+        🗺️ รายงานผังการเรียน
+      </button>
+      <button
+        onclick="exportCurriculumStructureExcel()"
+        style="background:#388e3c;color:white;margin-right:10px;"
+      >
+        ⬇️ Export โครงสร้าง (Excel)
+      </button>
+      <button
+        onclick="showCurriculumReport()"
+        style="background:#f44336; color:white; margin-right:0;"
+      >
+        📊 รายงานโครงสร้างหลักสูตร
+      </button>
+      <button
+        onclick="showTabeeReport()"
+        style="background:#388e3c;color:white;margin-right:10px;"
+      >
+        🌲 รายงานโครงสร้าง TABEE
+      </button>
+      <button
+        onclick="exportTabeeStructureExcel()"
+        style="background:#00796b;color:white;margin-right:10px;"
+      >
+        ⬇️ Export TABEE (Excel)
+      </button>
+    </div>
+
+    <!-- Modal สำหรับรายงาน -->
+    <div
+      id="report-modal"
+      style="display:none; position:fixed; top:6%; left:50%; transform:translateX(-50%); background:#fff; border:2px solid #888; padding:26px 24px 18px 24px; border-radius:16px; z-index:1200; width:95%; max-width:900px; max-height:82vh; overflow-y:auto; box-shadow:0 8px 24px #0002;"
+    >
+      <h2 style="margin-top:0;margin-bottom:12px;">
+        📊 โครงสร้างหลักสูตรตามหมวดหมู่
+      </h2>
+      <div id="report-content"></div>
+      <div style="text-align:right; margin-top:16px;">
+        <button
+          onclick="closeCurriculumReport()"
+          style="background:#bbb;color:white;padding:8px 16px;border-radius:7px;border:none;"
+        >
+          ❌ ปิด
+        </button>
       </div>
     </div>
-    <div id="subject-pool" class="subject-pool"></div>
-  </div>
-  <div id="planner"></div>
-</div>
-<div id="category-tab" class="tab-section">
-  <div id="cat-toolbox">
-    <button onclick="showCategoryModal(null)">➕ เพิ่มหมวดหมู่หลัก</button>
-  </div>
-  <ul id="cat-tree"></ul>
-</div>
-<div id="tabee-tab" class="tab-section">
-  <div id="tabee-toolbox">
-    <button onclick="showTabeeModal(null)">➕ เพิ่ม TABEE หลัก</button>
-  </div>
-  <ul id="tabee-tree"></ul>
-</div>
-<!-- Modal: Category add/edit -->
-<div id="category-modal">
-  <h3 id="cat-modal-title"></h3>
-  <label>เลขหมวด: <input type="text" id="cat-code"></label><br><br>
-  <label>ชื่อหมวด: <input type="text" id="cat-name"></label><br><br>
-  <label>คำอธิบาย:<br><textarea id="cat-desc" rows="2" style="width:100%;"></textarea></label><br><br>
-  <label>สีหมวด: <input type="color" id="cat-color" value="#2196f3"></label><br><br>
-  <button onclick="saveCategoryModal()">💾 บันทึก</button>
-  <button onclick="closeCategoryModal()">❌ ยกเลิก</button>
-</div>
-<!-- Modal: TABEE add/edit -->
-<div id="tabee-modal">
-  <h3 id="tabee-modal-title"></h3>
-  <label>เลข TABEE: <input type="text" id="tabee-code"></label><br><br>
-  <label>ชื่อ TABEE: <input type="text" id="tabee-name"></label><br><br>
-  <label>คำอธิบาย:<br><textarea id="tabee-desc" rows="2" style="width:100%;"></textarea></label><br><br>
-  <label>สี TABEE: <input type="color" id="tabee-color" value="#43a047"></label><br><br>
-  <button onclick="saveTabeeModal()">💾 บันทึก</button>
-  <button onclick="closeTabeeModal()">❌ ยกเลิก</button>
-</div>
-<!-- Modals อื่นๆ เดิม (multi, fullmulti, json, edit subject) -->
-<div id="add-multi-modal">
-  <h3>เพิ่มหลายวิชาแบบย่อ</h3>
-  <textarea id="multi-input" style="width:100%; height:120px;" placeholder="CN101 3&#10;CN102 1.5"></textarea>
-  <br>
-  <button onclick="submitMulti()">✅ เพิ่ม</button>
-  <button onclick="closeMulti()">❌ ยกเลิก</button>
-</div>
-<div id="add-fullmulti-modal">
-  <h3>เพิ่มหลายวิชาแบบเต็ม (แยก field ด้วย , ใส่ข้อความใน "")</h3>
-  <div style="font-size:0.95em;color:#666;margin-bottom:8px;">
-    ตัวอย่าง:<br>
-    <code>
-"CN201","วศ201","Programming II","การเขียนโปรแกรม 2",3,"CN101","1.1.1","เรียนต่อเนื่องจาก Programming I"<br>
-"CN301","","Data Science","วิทยาศาสตร์ข้อมูล",3,"CN201|MA102","1.2.3","ศึกษาวิธีใช้ข้อมูลในการวิเคราะห์"
-    </code>
-  </div>
-  <textarea id="fullmulti-input" style="width:100%; height:120px;" placeholder="..."></textarea>
-  <br>
-  <button onclick="submitFullMulti()">✅ เพิ่ม</button>
-  <button onclick="closeFullMulti()">❌ ยกเลิก</button>
-</div>
-<div id="json-modal">
-  <h3 id="json-modal-title">Export/Import JSON</h3>
-  <textarea id="json-text" style="width:100%; height:200px;"></textarea>
-  <br>
-  <button onclick="applyImport()">📥 นำเข้า</button>
-  <button onclick="closeJsonModal()">❌ ปิด</button>
-  <button onclick="saveJsonToFile()" style="background:#388e3c;color:white;margin:7px 7px 7px 0;">💾 Save to file</button>
-<input type="file" id="json-file-input" accept=".json" style="display:none" onchange="loadJsonFromFile(this)">
-<button onclick="document.getElementById('json-file-input').click()" style="background:#1976d2;color:white;margin:7px 7px 7px 0;">📂 Load from file</button>
 
-</div>
-<div id="subject-edit-modal">
-  <h3>📝 แก้ไขรายวิชา</h3>
-  <form id="edit-subject-form">
-    <label>รหัสวิชา (EN): <input type="text" id="edit-code-en"></label><br><br>
-    <label>รหัสวิชา (TH): <input type="text" id="edit-code-th"></label><br><br>
-    <label>ชื่อวิชา (EN): <input type="text" id="edit-name-en"></label><br><br>
-    <label>ชื่อวิชา (TH): <input type="text" id="edit-name-th"></label><br><br>
-    <label>หน่วยกิต: <input type="number" id="edit-credit" min="0" step="0.5"></label><br><br>
-    <label>วิชาบังคับก่อน (รหัส EN คั่นด้วย ,):<br><input type="text" id="edit-prereq"></label><br><br>
-    <label>หมวดหมู่: <input type="text" id="edit-category" placeholder="1.1.1"></label><br><br>
-    <label>หมวด TABEE: <input type="text" id="edit-tabee" placeholder="A1"></label><br><br>
-    <label>คำอธิบายภาษาไทย:<br>
-  <textarea id="edit-description-th" rows="2" style="width:100%;"></textarea>
-</label><br><br>
-<label>คำอธิบายภาษาอังกฤษ:<br>
-  <textarea id="edit-description-en" rows="2" style="width:100%;"></textarea>
-</label><br><br>
-    <button type="submit">💾 บันทึก</button>
-    <button type="button" onclick="closeEditModal()">❌ ยกเลิก</button>
-  </form>
-</div>
-<div style="position: fixed; bottom: 20px; right: 20px;">
-  <button onclick="exportAll()" style="margin-right:10px;">📤 ส่งออก JSON</button>
-  <button onclick="showImport()" style="margin-right:10px;">📥 นำเข้า JSON</button>
-  <button onclick="showStudyPlanChart()" style="background:#1976d2;color:white;margin-right:10px;">🗺️ รายงานผังการเรียน</button>
-  <button onclick="exportCurriculumStructureExcel()" style="background:#388e3c;color:white;margin-right:10px;">⬇️ Export โครงสร้าง (Excel)</button>
-  <button onclick="showCurriculumReport()" style="background:#f44336; color:white; margin-right:0;">📊 รายงานโครงสร้างหลักสูตร</button>
-  <button onclick="showTabeeReport()" style="background:#388e3c;color:white;margin-right:10px;">🌲 รายงานโครงสร้าง TABEE</button>
-  <button onclick="exportTabeeStructureExcel()" style="background:#00796b;color:white;margin-right:10px;">⬇️ Export TABEE (Excel)</button>
+    <div
+      id="studyplan-modal"
+      style="display:none; position:fixed; top:1%; left:5%; transform:translateX(-1%); background:#fff; border:2px solid #666; padding:20px 14px 18px 14px; border-radius:13px; z-index:1400; width:90%;  max-height:90vh; overflow:auto; box-shadow:0 8px 32px #0003;"
+    >
+      <h2 style="margin-top:0;">🗺️ ผังการเรียนและความสัมพันธ์วิชาบังคับก่อน</h2>
+      <div id="studyplan-content">
+        <div style="position:relative">
+          <div id="studyplan-table-wrap"></div>
+          <svg
+            id="studyplan-arrows"
+            style="position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:10;"
+          ></svg>
+        </div>
+      </div>
 
-</div>
+      <div style="text-align:right; margin-top:12px;">
+        <button
+          onclick="document.getElementById('studyplan-modal').style.display='none';"
+          style="background:#bbb;color:white;padding:8px 16px;border-radius:7px;border:none;"
+        >
+          ❌ ปิด
+        </button>
+      </div>
+    </div>
 
-
-<!-- Modal สำหรับรายงาน -->
-<div id="report-modal" style="display:none; position:fixed; top:6%; left:50%; transform:translateX(-50%); background:#fff; border:2px solid #888; padding:26px 24px 18px 24px; border-radius:16px; z-index:1200; width:95%; max-width:900px; max-height:82vh; overflow-y:auto; box-shadow:0 8px 24px #0002;">
-  <h2 style="margin-top:0;margin-bottom:12px;">📊 โครงสร้างหลักสูตรตามหมวดหมู่</h2>
-  <div id="report-content"></div>
-  <div style="text-align:right; margin-top:16px;">
-    <button onclick="closeCurriculumReport()" style="background:#bbb;color:white;padding:8px 16px;border-radius:7px;border:none;">❌ ปิด</button>
-  </div>
-</div>
-
-<div id="studyplan-modal" style="display:none; position:fixed; top:1%; left:5%; transform:translateX(-1%); background:#fff; border:2px solid #666; padding:20px 14px 18px 14px; border-radius:13px; z-index:1400; width:90%;  max-height:90vh; overflow:auto; box-shadow:0 8px 32px #0003;">
-  <h2 style="margin-top:0;">🗺️ ผังการเรียนและความสัมพันธ์วิชาบังคับก่อน</h2>
-  <div id="studyplan-content">
-  <div style="position:relative">
-    <div id="studyplan-table-wrap"></div>
-    <svg id="studyplan-arrows" style="position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:10;"></svg>
-  </div>
-</div>
-
-  <div style="text-align:right; margin-top:12px;">
-    <button onclick="document.getElementById('studyplan-modal').style.display='none';" style="background:#bbb;color:white;padding:8px 16px;border-radius:7px;border:none;">❌ ปิด</button>
-  </div>
-</div>
-
-
-<script>
-// =============== TAB Navigation ===============
-function showTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
-  if(tab==='curriculum') {
-    document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
-    document.getElementById('curriculum-tab').classList.add('active');
-  } else if(tab==='category') {
-    document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
-    document.getElementById('category-tab').classList.add('active');
-    renderCatTree();
-  } else {
-    document.querySelector('.tab-btn:nth-child(3)').classList.add('active');
-    document.getElementById('tabee-tab').classList.add('active');
-    renderTabeeTree();
-  }
-}
-// =============== Category Tree Editor (local) ===============
-let editingCategoryId = null, editingParentId = null;
-function showCategoryModal(parentOrId) {
-  editingParentId = null; editingCategoryId = null;
-  let isEdit = false, node = null;
-  if (parentOrId && typeof parentOrId === "string") {
-    editingCategoryId = parentOrId;
-    node = findNode(categoryTree, parentOrId);
-    isEdit = true;
-    document.getElementById('cat-modal-title').textContent = "✏️ แก้ไขหมวดหมู่";
-    document.getElementById('cat-code').value = node.code || "";
-    document.getElementById('cat-name').value = node.name || "";
-    document.getElementById('cat-desc').value = node.description || "";
-    document.getElementById('cat-color').value = node.color || "#2196f3";
-  } else {
-    editingParentId = parentOrId;
-    document.getElementById('cat-modal-title').textContent = "➕ เพิ่มหมวดหมู่";
-    document.getElementById('cat-code').value = "";
-    document.getElementById('cat-name').value = "";
-    document.getElementById('cat-desc').value = "";
-    document.getElementById('cat-color').value = "#2196f3";
-  }
-  document.getElementById('category-modal').style.display = 'block';
-}
-function closeCategoryModal() {
-  document.getElementById('category-modal').style.display = 'none';
-}
-function saveCategoryModal() {
-  const code = document.getElementById('cat-code').value.trim();
-  const name = document.getElementById('cat-name').value.trim();
-  const desc = document.getElementById('cat-desc').value.trim();
-  const color = document.getElementById('cat-color').value;
-  if (!code || !name) return alert("กรุณากรอกเลขหมวดและชื่อหมวด");
-  if (editingCategoryId) {
-    let node = findNode(categoryTree, editingCategoryId);
-    node.code = code; node.name = name; node.description = desc; node.color = color;
-  } else {
-    const newNode = { id: Date.now()+"", code, name, description: desc, color, children:[] };
-    if (!editingParentId) categoryTree.push(newNode);
-    else {
-      const parent = findNode(categoryTree, editingParentId);
-      parent.children.push(newNode);
-    }
-  }
-  closeCategoryModal(); renderCatTree();
-}
-let categoryTree = [
-  { id:"1", code:"1", name:"หมวดใหญ่", description:"หมวดหลักทั้งหมด", color:"#2196f3", children:[
-    { id:"1.1", code:"1.1", name:"หมวดย่อย", description:"หมวดเน้นเฉพาะทาง", color:"#f44336", children:[
-      { id:"1.1.1", code:"1.1.1", name:"หมวดย่อยย่อย", description:"พื้นฐาน", color:"#ffb300", children:[] }
-    ]}
-  ]}
-];
-function renderCatTree() {
-  const ul = document.getElementById('cat-tree');
-  ul.innerHTML = '';
-  function walk(nodes, parentUl) {
-    nodes.forEach(node => {
-      const li = document.createElement('li');
-      li.draggable = true;
-      li.ondragstart = e => { e.dataTransfer.setData("catid", node.id); };
-      li.ondragover = e => { e.preventDefault(); li.classList.add("drag-over"); }
-      li.ondragleave = e => { li.classList.remove("drag-over"); }
-      li.ondrop = e => {
-        e.preventDefault();
-        li.classList.remove("drag-over");
-        const dragId = e.dataTransfer.getData("catid");
-        if (dragId!==node.id) moveCategory(dragId, node.id);
-      };
-      li.innerHTML = `
-        <span class="cat-color-block" style="background:${node.color||'#2196f3'}"></span>
-        <b>${node.code}</b>: ${node.name}
-        ${node.description ? '<span class="cat-desc">- '+node.description+'</span>' : ''}
-        <button onclick="showCategoryModal('${node.id}')">✏️</button>
-        <button onclick="deleteCategory('${node.id}')">🗑</button>
-        <button onclick="showCategoryModal('${node.id}')">➕</button>`;
-      li.querySelectorAll('button')[2].onclick = (ev)=>{ ev.stopPropagation(); showCategoryModal(node.id); addCategory(node.id);}
-      if (node.children.length) {
-        const childUl = document.createElement('ul');
-        walk(node.children, childUl);
-        li.appendChild(childUl);
-      }
-      parentUl.appendChild(li);
-    });
-  }
-  walk(categoryTree, ul);
-}
-function addCategory(parentId) { showCategoryModal(parentId); }
-function deleteCategory(id) {
-  if(!confirm("ลบหมวดหมู่และหมวดย่อยทั้งหมดนี้?")) return;
-  removeNode(categoryTree, id);
-  renderCatTree();
-}
-function moveCategory(fromId, toId) {
-  const from = removeNode(categoryTree, fromId, true);
-  const target = findNode(categoryTree, toId);
-  if (target && from) target.children.push(from);
-  renderCatTree();
-}
-function findNode(nodes, id) {
-  for (let node of nodes) {
-    if (node.id === id) return node;
-    const f = findNode(node.children, id); if(f) return f;
-  }
-  return null;
-}
-function removeNode(nodes, id, returnNode) {
-  for (let i=0;i<nodes.length;i++) {
-    if (nodes[i].id === id) return returnNode ? nodes.splice(i,1)[0] : nodes.splice(i,1);
-    const f = removeNode(nodes[i].children, id, returnNode); if(f) return f;
-  }
-}
-function fillCategoryDefaults(nodes) {
-  nodes.forEach(node => {
-    if (typeof node.description !== "string") node.description = "";
-    if (!node.color) node.color = "#2196f3";
-    if (!Array.isArray(node.children)) node.children = [];
-    fillCategoryDefaults(node.children);
-  });
-}
-function findCategoryByCode(nodes, code) {
-  for (let node of nodes) {
-    if (node.code === code) return node;
-    const f = findCategoryByCode(node.children, code); if(f) return f;
-  }
-  return null;
-}
-renderCatTree();
-
-// =============== TABEE Tree Editor (local) ===============
-let editingTabeeId = null, editingTabeeParentId = null;
-function showTabeeModal(parentOrId) {
-  editingTabeeParentId = null; editingTabeeId = null;
-  let isEdit = false, node = null;
-  if (parentOrId && typeof parentOrId === "string") {
-    editingTabeeId = parentOrId;
-    node = findNode(tabeeTree, parentOrId);
-    isEdit = true;
-    document.getElementById('tabee-modal-title').textContent = "✏️ แก้ไข TABEE";
-    document.getElementById('tabee-code').value = node.code || "";
-    document.getElementById('tabee-name').value = node.name || "";
-    document.getElementById('tabee-desc').value = node.description || "";
-    document.getElementById('tabee-color').value = node.color || "#43a047";
-  } else {
-    editingTabeeParentId = parentOrId;
-    document.getElementById('tabee-modal-title').textContent = "➕ เพิ่ม TABEE";
-    document.getElementById('tabee-code').value = "";
-    document.getElementById('tabee-name').value = "";
-    document.getElementById('tabee-desc').value = "";
-    document.getElementById('tabee-color').value = "#43a047";
-  }
-  document.getElementById('tabee-modal').style.display = 'block';
-}
-function closeTabeeModal() {
-  document.getElementById('tabee-modal').style.display = 'none';
-}
-function saveTabeeModal() {
-  const code = document.getElementById('tabee-code').value.trim();
-  const name = document.getElementById('tabee-name').value.trim();
-  const desc = document.getElementById('tabee-desc').value.trim();
-  const color = document.getElementById('tabee-color').value;
-  if (!code || !name) return alert("กรุณากรอกเลข TABEE และชื่อ TABEE");
-  if (editingTabeeId) {
-    let node = findNode(tabeeTree, editingTabeeId);
-    node.code = code; node.name = name; node.description = desc; node.color = color;
-  } else {
-    const newNode = { id: Date.now()+"", code, name, description: desc, color, children:[] };
-    if (!editingTabeeParentId) tabeeTree.push(newNode);
-    else {
-      const parent = findNode(tabeeTree, editingTabeeParentId);
-      parent.children.push(newNode);
-    }
-  }
-  closeTabeeModal(); renderTabeeTree();
-}
-let tabeeTree = [
-  { id:"A", code:"A", name:"มาตรฐานหลัก", description:"ตัวอย่างหมวด TABEE", color:"#43a047", children:[
-    { id:"A1", code:"A1", name:"พื้นฐาน", description:"พื้นฐาน", color:"#00bcd4", children:[] }
-  ]}
-];
-function renderTabeeTree() {
-  const ul = document.getElementById('tabee-tree');
-  ul.innerHTML = '';
-  function walk(nodes, parentUl) {
-    nodes.forEach(node => {
-      const li = document.createElement('li');
-      li.draggable = true;
-      li.ondragstart = e => { e.dataTransfer.setData("tabeeid", node.id); };
-      li.ondragover = e => { e.preventDefault(); li.classList.add("drag-over"); }
-      li.ondragleave = e => { li.classList.remove("drag-over"); }
-      li.ondrop = e => {
-        e.preventDefault();
-        li.classList.remove("drag-over");
-        const dragId = e.dataTransfer.getData("tabeeid");
-        if (dragId!==node.id) moveTabee(dragId, node.id);
-      };
-      li.innerHTML = `
-        <span class="tabee-color-block" style="background:${node.color||'#43a047'}"></span>
-        <b>${node.code}</b>: ${node.name}
-        ${node.description ? '<span class="tabee-desc">- '+node.description+'</span>' : ''}
-        <button onclick="showTabeeModal('${node.id}')">✏️</button>
-        <button onclick="deleteTabee('${node.id}')">🗑</button>
-        <button onclick="showTabeeModal('${node.id}')">➕</button>`;
-      li.querySelectorAll('button')[2].onclick = (ev)=>{ ev.stopPropagation(); showTabeeModal(node.id); addTabee(node.id);}
-      if (node.children.length) {
-        const childUl = document.createElement('ul');
-        walk(node.children, childUl);
-        li.appendChild(childUl);
-      }
-      parentUl.appendChild(li);
-    });
-  }
-  walk(tabeeTree, ul);
-}
-function addTabee(parentId) { showTabeeModal(parentId); }
-function deleteTabee(id) {
-  if(!confirm("ลบ TABEE และลูกทั้งหมดนี้?")) return;
-  removeNode(tabeeTree, id);
-  renderTabeeTree();
-}
-function moveTabee(fromId, toId) {
-  const from = removeNode(tabeeTree, fromId, true);
-  const target = findNode(tabeeTree, toId);
-  if (target && from) target.children.push(from);
-  renderTabeeTree();
-}
-function fillTabeeDefaults(nodes) {
-  nodes.forEach(node => {
-    if (typeof node.description !== "string") node.description = "";
-    if (!node.color) node.color = "#43a047";
-    if (!Array.isArray(node.children)) node.children = [];
-    fillTabeeDefaults(node.children);
-  });
-}
-function findTabeeByCode(nodes, code) {
-  for (let node of nodes) {
-    if (node.code === code) return node;
-    const f = findTabeeByCode(node.children, code); if(f) return f;
-  }
-  return null;
-}
-renderTabeeTree();
-
-// =============== CURRICULUM PLANNER (เหมือนเดิม + tabee) ===============
-const years = [1, 2, 3, 4];
-const semesters = ["ภาคต้น", "ภาคปลาย", "ฤดูร้อน"];
-const plannerDiv = document.getElementById("planner");
-const subjectPool = document.getElementById("subject-pool");
-const addButton = document.getElementById("add-subject-btn");
-let editTarget = null;
-const addMultiBtn = document.getElementById("add-multi-btn");
-const addMultiModal = document.getElementById("add-multi-modal");
-const multiInput = document.getElementById("multi-input");
-addMultiBtn.onclick = function() {
-  addMultiModal.style.display = "block";
-  multiInput.value = "";
-  multiInput.focus();
-};
-function closeMulti() { addMultiModal.style.display = "none"; }
-function submitMulti() {
-  const lines = multiInput.value.split("\n").map(l=>l.trim()).filter(Boolean);
-  let success = 0;
-  lines.forEach(line => {
-    const m = line.match(/^([A-Za-z0-9_\-]+)\s+([\d.]+)$/);
-    if (m) {
-      addSubject({
-        code_en: m[1], code_th: "", name_en: "", name_th: "",
-        credit: m[2], prereq: [], category: "", tabee: "", description: ""
-      });
-      success++;
-    }
-  });
-  closeMulti();
-  if (!success) alert("รูปแบบไม่ถูกต้อง ตัวอย่างที่ถูกต้อง: CN101 3");
-}
-const addFullMultiBtn = document.getElementById("add-fullmulti-btn");
-const addFullMultiModal = document.getElementById("add-fullmulti-modal");
-const fullMultiInput = document.getElementById("fullmulti-input");
-addFullMultiBtn.onclick = function() {
-  addFullMultiModal.style.display = "block";
-  fullMultiInput.value = "";
-  fullMultiInput.focus();
-};
-function closeFullMulti() { addFullMultiModal.style.display = "none"; }
-function parseCSVLine(line) {
-  const result = [];
-  let cur = '';
-  let inQuote = false;
-  for (let i = 0; i < line.length; i++) {
-    const c = line[i];
-    if (c === '"') inQuote = !inQuote;
-    else if (c === ',' && !inQuote) { result.push(cur.trim()); cur = ''; }
-    else cur += c;
-  }
-  result.push(cur.trim());
-  return result.map(s => s.replace(/^"(.*)"$/,'$1'));
-}
-function submitFullMulti() {
-  const lines = fullMultiInput.value.split("\n").map(l=>l.trim()).filter(Boolean);
-  let success = 0, fail = 0;
-  lines.forEach(line => {
-    const arr = parseCSVLine(line);
-    if (arr.length >= 9) {
-      addSubject({
-        code_en: arr[0] || "",
-        code_th: arr[1] || "",
-        name_en: arr[2] || "",
-        name_th: arr[3] || "",
-        credit: arr[4] || "3",
-        prereq: arr[5] ? arr[5].split('|').map(s=>s.trim()).filter(Boolean) : [],
-        category: arr[6] || "",
-        tabee: arr[7] || "",
-        description_th: arr[8] || "",
-        description_en: arr[9] || ""
-      });
-      success++;
-    } else {
-      fail++;
-    }
-  });
-  closeFullMulti();
-  if (!success) alert("ไม่มีรายการที่เพิ่มได้ กรุณาตรวจสอบรูปแบบข้อมูล");
-  else if (fail) alert("บางรายการเพิ่มไม่สำเร็จ ("+fail+" บรรทัด)");
-}
-addButton.addEventListener("click", () => {
-  const code_en = prompt("กรุณากรอกรหัสวิชา(EN):", "SUBJ1234");
-  if (!code_en) return;
-  addSubject({
-    code_en: code_en, code_th: "", name_en: "", name_th: "",
-    credit: 3, prereq: [], category: "", tabee: "", description: ""
-  });
-});
-subjectPool.addEventListener("dragover", e => {
-  e.preventDefault();
-  subjectPool.classList.add("drag-over");
-});
-subjectPool.addEventListener("dragleave", () => subjectPool.classList.remove("drag-over"));
-subjectPool.addEventListener("drop", e => {
-  e.preventDefault();
-  const id = e.dataTransfer.getData("text/plain");
-  const dragged = document.getElementById(id);
-  if (dragged) subjectPool.appendChild(dragged);
-  subjectPool.classList.remove("drag-over");
-});
-years.forEach(year => {
-  const label = document.createElement("div");
-  label.className = "year-label";
-  label.textContent = `ปี ${year}`;
-  plannerDiv.appendChild(label);
-  const headerRow = document.createElement("div");
-  headerRow.className = "grid";
-  semesters.forEach(term => {
-    const header = document.createElement("div");
-    header.textContent = term;
-    header.style.fontWeight = "bold";
-    header.style.textAlign = "center";
-    header.style.paddingBottom = "5px";
-    headerRow.appendChild(header);
-  });
-  plannerDiv.appendChild(headerRow);
-  const row = document.createElement("div");
-  row.className = "grid";
-  semesters.forEach((term, index) => {
-    const column = document.createElement("div");
-    column.className = "semester";
-    column.dataset.year = year;
-    column.dataset.term = index + 1;
-    column.addEventListener("dragover", e => {
-      e.preventDefault();
-      column.classList.add("drag-over");
-    });
-    column.addEventListener("dragleave", () => column.classList.remove("drag-over"));
-    column.addEventListener("drop", e => {
-      e.preventDefault();
-      const id = e.dataTransfer.getData("text/plain");
-      const dragged = document.getElementById(id);
-      if (dragged) column.appendChild(dragged);
-      column.classList.remove("drag-over");
-    });
-    row.appendChild(column);
-  });
-  plannerDiv.appendChild(row);
-});
-function updateCredits() {
-  // ต่อแต่ละเทอม
-  document.querySelectorAll('.semester').forEach(col => {
-    let sum = 0;
-    col.querySelectorAll('.item').forEach(item => {
-      let data = JSON.parse(item.dataset.detail||'{}');
-      let cred = parseFloat(data.credit||0);
-      sum += isNaN(cred) ? 0 : cred;
-    });
-    let old = col.querySelector('.credit-summary');
-    if (old) old.remove();
-    if (sum > 0) {
-      let label = document.createElement('div');
-      label.className = 'credit-summary';
-      label.style = 'margin-top:6px;font-size:0.92em;color:#1976d2;font-weight:bold;text-align:right;';
-      label.textContent = `รวม ${sum} หน่วยกิต`;
-      col.appendChild(label);
-    }
-  });
-  // รวมทุกเทอม
-  let total = 0;
-  document.querySelectorAll('.semester').forEach(col => {
-    col.querySelectorAll('.item').forEach(item => {
-      let data = JSON.parse(item.dataset.detail||'{}');
-      let cred = parseFloat(data.credit||0);
-      total += isNaN(cred) ? 0 : cred;
-    });
-  });
-  // แสดงด้านล่างสุด
-  let sumdiv = document.getElementById('sum-credit-total');
-  if (!sumdiv) {
-    sumdiv = document.createElement('div');
-    sumdiv.id = 'sum-credit-total';
-    sumdiv.style = 'margin:30px 0 8px 0;padding:8px 18px;background:#fffbe8;border-radius:12px;font-size:1.1em;font-weight:bold;color:#ff9800;box-shadow:0 1px 4px #0002;text-align:right;';
-    plannerDiv.appendChild(sumdiv);
-  }
-  sumdiv.textContent = `หน่วยกิตรวมทั้งหมด ${total} หน่วยกิต`;
-}
-// Call updateCredits after any changes
-setInterval(updateCredits, 1000);
-
-function exportAll() {
-  const plan = {};
-  document.querySelectorAll('.semester, .subject-pool').forEach(container => {
-    const key = container.id || `y${container.dataset.year}_t${container.dataset.term}`;
-    plan[key] = [];
-    container.querySelectorAll('.item').forEach(item => {
-      plan[key].push(JSON.parse(item.dataset.detail));
-    });
-  });
-  document.getElementById('json-text').value = JSON.stringify({
-    plan: plan,
-    categories: categoryTree,
-    tabeeTree: tabeeTree
-  }, null, 2);
-  document.getElementById('json-modal-title').textContent = '📤 ส่งออก JSON (คัดลอกข้อมูลไว้)';
-  document.getElementById('json-modal').style.display = 'block';
-}
-function showImport() {
-  document.getElementById('json-text').value = '';
-  document.getElementById('json-modal-title').textContent = '📥 วาง JSON ที่ต้องการนำเข้า';
-  document.getElementById('json-modal').style.display = 'block';
-}
-function closeJsonModal() {
-  document.getElementById('json-modal').style.display = 'none';
-}
-function applyImport() {
-  const json = document.getElementById('json-text').value;
-  try {
-    const data = JSON.parse(json);
-    if(data.plan) {
-      document.querySelectorAll('.semester, .subject-pool').forEach(container => {
-        container.innerHTML = '';
-      });
-      for (const key in data.plan) {
-        const container = document.getElementById(key) || document.querySelector(`[data-year="${key[1]}"][data-term="${key[4]}"]`);
-        if (container) {
-          data.plan[key].forEach(subj => addSubject(subj, container));
+    <script>
+      // =============== TAB Navigation ===============
+      function showTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
+        if(tab==='curriculum') {
+          document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+          document.getElementById('curriculum-tab').classList.add('active');
+        } else if(tab==='category') {
+          document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+          document.getElementById('category-tab').classList.add('active');
+          renderCatTree();
+        } else {
+          document.querySelector('.tab-btn:nth-child(3)').classList.add('active');
+          document.getElementById('tabee-tab').classList.add('active');
+          renderTabeeTree();
         }
       }
-    }
-    if(data.categories) {
-      fillCategoryDefaults(data.categories); // Compatibility!
-      categoryTree = data.categories;
-      renderCatTree();
-    }
-    if(data.tabeeTree) {
-      fillTabeeDefaults(data.tabeeTree);
-      tabeeTree = data.tabeeTree;
-      renderTabeeTree();
-    }
-    refreshAllSubjectItems();
-    closeJsonModal();
-  } catch (e) {
-    alert("รูปแบบ JSON ไม่ถูกต้อง");
-  }
-}
-function showEditModal(item) {
-  editTarget = item;
-  const data = JSON.parse(item.dataset.detail);
-  document.getElementById('edit-code-en').value = data.code_en || "";
-  document.getElementById('edit-code-th').value = data.code_th || "";
-  document.getElementById('edit-name-en').value = data.name_en || "";
-  document.getElementById('edit-name-th').value = data.name_th || "";
-  document.getElementById('edit-credit').value = data.credit || "";
-  document.getElementById('edit-prereq').value = (data.prereq || []).join(",");
-  document.getElementById('edit-category').value = data.category || "";
-  document.getElementById('edit-tabee').value = data.tabee || "";
-  document.getElementById('edit-description-th').value = data.description_th || "";
-  document.getElementById('edit-description-en').value = data.description_en || "";
-  document.getElementById('subject-edit-modal').style.display = 'block';
-}
-function closeEditModal() {
-  document.getElementById('subject-edit-modal').style.display = 'none';
-}
-document.getElementById('edit-subject-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  if (!editTarget) return;
-  const data = {
-    code_en: document.getElementById('edit-code-en').value,
-    code_th: document.getElementById('edit-code-th').value,
-    name_en: document.getElementById('edit-name-en').value,
-    name_th: document.getElementById('edit-name-th').value,
-    credit: document.getElementById('edit-credit').value,
-    prereq: document.getElementById('edit-prereq').value.split(',').map(p => p.trim()).filter(Boolean),
-    category: document.getElementById('edit-category').value,
-    tabee: document.getElementById('edit-tabee').value,
-    description_th: document.getElementById('edit-description-th').value,
-    description_en: document.getElementById('edit-description-en').value
-  };
-  editTarget.dataset.detail = JSON.stringify(data);
-  renderSubjectItem(editTarget, data);
-  closeEditModal();
-});
-function renderSubjectItem(item, data) {
-  item.innerHTML = "";
-  let categoryTag = "";
-  if (data.category) {
-    let cat = findCategoryByCode(categoryTree, data.category);
-    if (cat) {
-      categoryTag = `<span style="background:${cat.color||'#eee'};color:#222;padding:2px 7px;border-radius:6px;margin-right:3px;font-size:0.8em;">${cat.code}</span>`;
-    }
-  }
-  let tabeeTag = "";
-  if (data.tabee) {
-    let t = findTabeeByCode(tabeeTree, data.tabee);
-    if (t) {
-      tabeeTag = `<span style="background:${t.color||'#eee'};color:#222;padding:2px 7px;border-radius:6px;margin-right:3px;font-size:0.8em;">${t.code}</span>`;
-    }
-  }
-  item.innerHTML = tabeeTag + categoryTag + `${data.code_en} (${data.credit})`;
-  let desc_th = data.description_th || "";
-let desc_en = data.description_en || "";
-let desc_merge = "";
-if(desc_th && desc_en) {
-  desc_merge = desc_th + "\n---\n" + desc_en;
-} else if(desc_th) {
-  desc_merge = desc_th;
-} else if(desc_en) {
-  desc_merge = desc_en;
-} else {
-  desc_merge = "-";
-}
-
-let tooltip = 
-  `${data.code_th||'-'} - ${data.name_th||'-'}\n${data.code_en||'-'} - ${data.name_en||'-'}\n` +
-  `${data.credit||'-'} หน่วยกิต | หมวด: ${data.category||'-'} | TABEE: ${data.tabee||'-'}\n` +
-  `วิชาบังคับก่อน: ${(data.prereq||[]).join(', ')}\n` +
-  `คำอธิบาย:\n${desc_merge}`;
-
-  item.setAttribute("data-tooltip", tooltip);
-  item.setAttribute("data-code", data.code_en);
-  const editBtn = document.createElement("button");
-  editBtn.textContent = "✏️";
-  editBtn.style.marginLeft = "4px";
-  editBtn.onclick = (e) => { e.stopPropagation(); showEditModal(item); };
-  item.appendChild(editBtn);
-}
-function addSubject(subjectData, container = null) {
-  const data = {
-    code_en: subjectData.code_en || "",
-    code_th: subjectData.code_th || "",
-    name_en: subjectData.name_en || "",
-    name_th: subjectData.name_th || "",
-    credit: subjectData.credit || "3",
-    prereq: subjectData.prereq || [],
-    category: subjectData.category || "",
-    tabee: subjectData.tabee || "",
-    description_th: subjectData.description_th || "",
-     description_en: subjectData.description_en || ""
-  };
-  const item = document.createElement("div");
-  item.className = "item";
-  item.id = `item-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
-  item.dataset.detail = JSON.stringify(data);
-  item.draggable = true;
-  item.addEventListener("dragstart", e => {
-    e.dataTransfer.setData("text/plain", item.id);
-  });
-  renderSubjectItem(item, data);
-  (container || subjectPool).appendChild(item);
-}
-["MATH101", "PHYS101", "ENGL101", "COMP101", "SCIE101", "PE101"].forEach(code =>
-  addSubject({ code_en: code, code_th: "", name_en: "", name_th: "", credit: 3, prereq: [], category: "", tabee:"", description_th: "",description_en:"" })
-);
-
-function showCurriculumReport() {
-  let allSubjects = [];
-  document.querySelectorAll('.item').forEach(item=>{
-    try { allSubjects.push(JSON.parse(item.dataset.detail)); } catch(e){}
-  });
-
-  function renderCatReport(nodes, indent=0) {
-    let html = '';
-    let sumAll = 0;
-    nodes.forEach(cat => {
-      let inCat = allSubjects.filter(subj => subj.category === cat.code);
-      let sum = inCat.reduce((s,subj)=>s+parseFloat(subj.credit||0), 0);
-      let childHtml = '';
-      let childSum = 0;
-      if (cat.children && cat.children.length) {
-        cat.children.forEach(child => {
-          let r = renderCatReport([child], indent+1);
-          childHtml += r.html;
-          childSum += r.sum;
-        });
+      // =============== Category Tree Editor (local) ===============
+      let editingCategoryId = null, editingParentId = null;
+      function showCategoryModal(parentOrId) {
+        editingParentId = null; editingCategoryId = null;
+        let isEdit = false, node = null;
+        if (parentOrId && typeof parentOrId === "string") {
+          editingCategoryId = parentOrId;
+          node = findNode(categoryTree, parentOrId);
+          isEdit = true;
+          document.getElementById('cat-modal-title').textContent = "✏️ แก้ไขหมวดหมู่";
+          document.getElementById('cat-code').value = node.code || "";
+          document.getElementById('cat-name').value = node.name || "";
+          document.getElementById('cat-desc').value = node.description || "";
+          document.getElementById('cat-color').value = node.color || "#2196f3";
+        } else {
+          editingParentId = parentOrId;
+          document.getElementById('cat-modal-title').textContent = "➕ เพิ่มหมวดหมู่";
+          document.getElementById('cat-code').value = "";
+          document.getElementById('cat-name').value = "";
+          document.getElementById('cat-desc').value = "";
+          document.getElementById('cat-color').value = "#2196f3";
+        }
+        document.getElementById('category-modal').style.display = 'block';
       }
-      let total = sum + childSum;
-      sumAll += total;
-
-      html += `<div style="margin-left:${indent*24}px; margin-bottom:8px;">
-        <span style="
-          display:inline-block;
-          width:16px; height:16px;
-          border-radius:50%;
-          background:${cat.color||'#ddd'};
-          vertical-align:middle;
-          margin-right:8px;
-          box-shadow:0 1px 2px #0002;
-        "></span>
-        <span style="font-weight:bold;font-size:1em;color:#222;">
-          ${cat.code} ${cat.name}
-        </span>
-        <span style="color:#f57c00; font-weight:bold; margin-left:7px; font-size:1em;">
-          (รวมหมวดนี้และลูก: ${total} หน่วยกิต)
-        </span>
-        ${cat.description? `<div style="color:#888; margin-left:5px; margin-bottom:2px; font-size:0.95em;">${cat.description}</div>`:""}
-        ${inCat.length ? `<ul style="margin:5px 0 4px 20px;">${inCat.map(subj=>`
-          <li>
-            <b>${subj.code_en}</b>
-            <span style="color:#2196f3;">(${subj.credit} หน่วยกิต)</span>
-            ${subj.name_th? ' - '+subj.name_th : '' }
-          </li>
-        `).join('')}</ul>` : ""}
-        ${childHtml}
-      </div>`;
-    });
-    return { html, sum: sumAll };
-  }
-
-  // ตรงนี้คือจุดสำคัญ!
-  const report = renderCatReport(categoryTree);
-
-  document.getElementById('report-content').innerHTML = `
-    <div style="font-size:1.12em;font-weight:bold;color:#388e3c;margin-bottom:18px;">
-      ✨ หน่วยกิตรวมทั้งหลักสูตร: <span style="color:#e65100">${report.sum}</span> หน่วยกิต
-    </div>
-    ${report.html}
-  `;
-  document.getElementById('report-modal').style.display = 'block';
-}
-
-function closeCurriculumReport() {
-  document.getElementById('report-modal').style.display = 'none';
-}
-
-function refreshAllSubjectItems() {
-  document.querySelectorAll('.item').forEach(item => {
-    try {
-      let data = JSON.parse(item.dataset.detail);
-      renderSubjectItem(item, data);
-    } catch (e) {}
-  });
-}
-
-function exportCurriculumStructureExcel() {
-  // ดึงทุก subject ปัจจุบัน
-  let allSubjects = [];
-  document.querySelectorAll('.item').forEach(item=>{
-    try { allSubjects.push(JSON.parse(item.dataset.detail)); } catch(e){}
-  });
-
-  // helper: Flatten หมวด/รายวิชาเป็นแถว ๆ
-  function flattenCat(nodes, indent=0, parentCodes=[]) {
-    let rows = [];
-    nodes.forEach(cat => {
-      let inCat = allSubjects.filter(subj => subj.category === cat.code);
-      let sum = inCat.reduce((s,subj)=>s+parseFloat(subj.credit||0), 0);
-
-      // ลูกหมวด
-      let childRows = [];
-      let childSum = 0;
-      if (cat.children && cat.children.length) {
-        cat.children.forEach(child => {
-          let r = flattenCat([child], indent+1, parentCodes.concat(cat.code));
-          childRows = childRows.concat(r.rows);
-          childSum += r.sum;
-        });
+      function closeCategoryModal() {
+        document.getElementById('category-modal').style.display = 'none';
       }
-      let total = sum + childSum;
-
-      // push หมวดนี้
-      rows.push({
-        'หมวด': "  ".repeat(indent) + cat.code + " " + cat.name,
-        'รหัสวิชา': "",
-        'ชื่อวิชา': "",
-        'หน่วยกิต': "",
-        'รวมหน่วยกิต': total,
-        'คำอธิบาย': cat.description_th || cat.description_en || ""
-      });
-      // รายวิชา
-      inCat.forEach(subj => {
-        rows.push({
-          'หมวด': "  ".repeat(indent+1) + "•",
-          'รหัสวิชา': subj.code_en,
-          'ชื่อวิชา': subj.name_th || subj.name_en,
-          'หน่วยกิต': subj.credit,
-          'รวมหน่วยกิต': "",
-          'คำอธิบาย': cat.description_th || cat.description_en || ""
-        });
-      });
-      // ลูกหมวด
-      rows = rows.concat(childRows);
-    });
-    return {rows: rows, sum: rows.length ? rows.filter(r=>r['รวมหน่วยกิต']).map(r=>parseFloat(r['รวมหน่วยกิต']||0)).reduce((a,b)=>a+b,0) : 0};
-  }
-
-  let flat = flattenCat(categoryTree);
-
-  // Sheet header
-  let ws_data = [
-    ['หมวดหมู่', 'รหัสวิชา', 'ชื่อวิชา', 'หน่วยกิต', 'รวมหน่วยกิต', 'คำอธิบาย']
-  ];
-  flat.rows.forEach(row=>{
-    ws_data.push([
-      row['หมวด'], row['รหัสวิชา'], row['ชื่อวิชา'], row['หน่วยกิต'], row['รวมหน่วยกิต'], row['คำอธิบาย']
-    ]);
-  });
-
-  // SheetJS Export
-  let wb = XLSX.utils.book_new();
-  let ws = XLSX.utils.aoa_to_sheet(ws_data);
-  XLSX.utils.book_append_sheet(wb, ws, "โครงสร้างหลักสูตร");
-  XLSX.writeFile(wb, "curriculum_structure.xlsx");
-}
-
-function showTabeeReport() {
-  let allSubjects = [];
-  document.querySelectorAll('.item').forEach(item=>{
-    try { allSubjects.push(JSON.parse(item.dataset.detail)); } catch(e){}
-  });
-
-  function renderTabeeTree(nodes, indent=0) {
-    let html = '';
-    let sumAll = 0;
-    nodes.forEach(tabee => {
-      let inTabee = allSubjects.filter(subj => subj.tabee === tabee.code);
-      let sum = inTabee.reduce((s,subj)=>s+parseFloat(subj.credit||0), 0);
-      let childHtml = '';
-      let childSum = 0;
-      if (tabee.children && tabee.children.length) {
-        tabee.children.forEach(child => {
-          let r = renderTabeeTree([child], indent+1);
-          childHtml += r.html;
-          childSum += r.sum;
-        });
+      function saveCategoryModal() {
+        const code = document.getElementById('cat-code').value.trim();
+        const name = document.getElementById('cat-name').value.trim();
+        const desc = document.getElementById('cat-desc').value.trim();
+        const color = document.getElementById('cat-color').value;
+        if (!code || !name) return alert("กรุณากรอกเลขหมวดและชื่อหมวด");
+        if (editingCategoryId) {
+          let node = findNode(categoryTree, editingCategoryId);
+          node.code = code; node.name = name; node.description = desc; node.color = color;
+        } else {
+          const newNode = { id: Date.now()+"", code, name, description: desc, color, children:[] };
+          if (!editingParentId) categoryTree.push(newNode);
+          else {
+            const parent = findNode(categoryTree, editingParentId);
+            parent.children.push(newNode);
+          }
+        }
+        closeCategoryModal(); renderCatTree();
       }
-      let total = sum + childSum;
-      sumAll += total;
-      html += `<div style="margin-left:${indent*24}px; margin-bottom:8px;">
-        <span style="
-          display:inline-block;
-          width:16px; height:16px;
-          border-radius:50%;
-          background:${tabee.color||'#ddd'};
-          vertical-align:middle;
-          margin-right:8px;
-          box-shadow:0 1px 2px #0002;
-        "></span>
-        <span style="font-weight:bold;font-size:1em;color:#222;">
-          ${tabee.code} ${tabee.name}
-        </span>
-        <span style="color:#00897b; font-weight:bold; margin-left:7px; font-size:1em;">
-          (รวม TABEE นี้และลูก: ${total} หน่วยกิต)
-        </span>
-        ${tabee.description? `<div style="color:#888; margin-left:5px; margin-bottom:2px; font-size:0.95em;">${tabee.description}</div>`:""}
-        ${inTabee.length ? `<ul style="margin:5px 0 4px 20px;">${inTabee.map(subj=>`
-          <li>
-            <b>${subj.code_en}</b>
-            <span style="color:#2196f3;">(${subj.credit} หน่วยกิต)</span>
-            ${subj.name_th? ' - '+subj.name_th : '' }
-          </li>
-        `).join('')}</ul>` : ""}
-        ${childHtml}
-      </div>`;
-    });
-    return { html, sum: sumAll };
-  }
-
-  const report = renderTabeeTree(tabeeTree);
-  // แสดงใน modal รายงานเดิมหรือ popup ใหม่ก็ได้
-  document.getElementById('report-content').innerHTML = `
-    <div style="font-size:1.12em;font-weight:bold;color:#00796b;margin-bottom:18px;">
-      🌲 หน่วยกิตรวมตามโครงสร้าง TABEE: <span style="color:#e65100">${report.sum}</span> หน่วยกิต
-    </div>
-    ${report.html}
-  `;
-  document.getElementById('report-modal').style.display = 'block';
-}
-function exportTabeeStructureExcel() {
-  let allSubjects = [];
-  document.querySelectorAll('.item').forEach(item=>{
-    try { allSubjects.push(JSON.parse(item.dataset.detail)); } catch(e){}
-  });
-
-  function flattenTabee(nodes, indent=0) {
-    let rows = [];
-    nodes.forEach(tabee => {
-      let inTabee = allSubjects.filter(subj => subj.tabee === tabee.code);
-      let sum = inTabee.reduce((s,subj)=>s+parseFloat(subj.credit||0), 0);
-
-      // ลูก
-      let childRows = [];
-      let childSum = 0;
-      if (tabee.children && tabee.children.length) {
-        tabee.children.forEach(child => {
-          let r = flattenTabee([child], indent+1);
-          childRows = childRows.concat(r.rows);
-          childSum += r.sum;
-        });
-      }
-      let total = sum + childSum;
-      rows.push({
-        'TABEE': "  ".repeat(indent) + tabee.code + " " + tabee.name,
-        'รหัสวิชา': "",
-        'ชื่อวิชา': "",
-        'หน่วยกิต': "",
-        'รวมหน่วยกิต': total,
-        'คำอธิบาย': tabee.description || ""
-      });
-      inTabee.forEach(subj => {
-        rows.push({
-          'TABEE': "  ".repeat(indent+1) + "•",
-          'รหัสวิชา': subj.code_en,
-          'ชื่อวิชา': subj.name_th || subj.name_en,
-          'หน่วยกิต': subj.credit,
-          'รวมหน่วยกิต': "",
-          'คำอธิบาย': subj.description_th || "",
-          'คำอธิบาย': subj.description_en || ""
-        });
-      });
-      rows = rows.concat(childRows);
-    });
-    return {rows: rows, sum: rows.length ? rows.filter(r=>r['รวมหน่วยกิต']).map(r=>parseFloat(r['รวมหน่วยกิต']||0)).reduce((a,b)=>a+b,0) : 0};
-  }
-
-  let flat = flattenTabee(tabeeTree);
-
-  let ws_data = [
-    ['TABEE', 'รหัสวิชา', 'ชื่อวิชา', 'หน่วยกิต', 'รวมหน่วยกิต', 'คำอธิบาย']
-  ];
-  flat.rows.forEach(row=>{
-    ws_data.push([
-      row['TABEE'], row['รหัสวิชา'], row['ชื่อวิชา'], row['หน่วยกิต'], row['รวมหน่วยกิต'], row['คำอธิบาย']
-    ]);
-  });
-
-  let wb = XLSX.utils.book_new();
-  let ws = XLSX.utils.aoa_to_sheet(ws_data);
-  XLSX.utils.book_append_sheet(wb, ws, "TABEE Structure");
-  XLSX.writeFile(wb, "tabee_structure.xlsx");
-}
-
-function showStudyPlanChart() {
-  const years = [1, 2, 3, 4];
-  const terms = ["ภาคต้น", "ภาคปลาย", "ฤดูร้อน"];
-
-  let plan = {};
-  document.querySelectorAll('.semester, .subject-pool').forEach(container => {
-    const key = container.id || `y${container.dataset.year}_t${container.dataset.term}`;
-    plan[key] = [];
-    container.querySelectorAll('.item').forEach(item => {
-      plan[key].push(JSON.parse(item.dataset.detail));
-    });
-  });
-
-  // เรียงภายใน cell ตามหมวด+รหัส
-function sortSubjects(subjs) {
-  // map รหัสหมวด → ลำดับที่ชัดเจน
-  const catOrder = buildCategoryOrderMap(categoryTree);
-
-  return subjs.slice().sort((a, b) => {
-    const aIdx = catOrder[a.category] !== undefined ? catOrder[a.category] : 9999;
-    const bIdx = catOrder[b.category] !== undefined ? catOrder[b.category] : 9999;
-    if(aIdx !== bIdx) return aIdx - bIdx;
-    // ลำดับเดียวกันให้เรียงตามรหัสวิชา
-    return (a.code_en || "").localeCompare(b.code_en || "");
-  });
-}
-
-
-  // วาดตาราง
-  let table = `<table border="1" cellpadding="4" cellspacing="0" style="border-collapse:collapse;width:100%;background:#fafbfc;position:relative;">
-    <tr>
-      ${years.map(y=>`<th colspan="3" style="background:#1976d2;color:#fff;font-size:1.08em;">ปี ${y}</th>`).join('')}
-    </tr>
-    <tr>
-      ${years.map(_=>terms.map(t=>`<th style="background:#e3e7ef;color:#333;">${t}</th>`).join('')).join('')}
-    </tr>
-    <tr id="studyplan-maxrow"></tr>
-  </table>`;
-  document.getElementById('studyplan-table-wrap').innerHTML = table;
-
-  // วาง subject ลง cell
-  let maxRow = 0;
-  let cellSubs = [];
-  let cellIdMap = {}; // key: code_en + [ปี,เทอม,ลำดับ], value: DOM id
-  for(let y=1;y<=4;y++) {
-    for(let t=1;t<=3;t++) {
-      let key = `y${y}_t${t}`;
-      let arr = plan[key] ? sortSubjects(plan[key]) : [];
-      cellSubs.push(arr);
-      if(arr.length > maxRow) maxRow = arr.length;
-    }
-  }
-  let trhtml = '';
-  let subjectPos = {}; // code_en => [array ของ cell id]
-  let globalIndex = 0;
-  for(let r=0;r<maxRow;r++) {
-    trhtml += '<tr>';
-    let cellIdx = 0;
-    for(let i=0;i<cellSubs.length;i++) {
-      let subj = cellSubs[i][r];
-      if(subj) {
-        // key ของกล่อง: code_en + ปี + เทอม + index
-        let y = Math.floor(i/3)+1;
-        let t = (i%3)+1;
-        let id = `studycell-${subj.code_en}-${y}-${t}-${r}`;
-        if(!subjectPos[subj.code_en]) subjectPos[subj.code_en]=[];
-        subjectPos[subj.code_en].push(id);
-        cellIdMap[id] = { y, t, r, code: subj.code_en };
-        // หา category
-        let cat = findCategoryByCode(categoryTree, subj.category||"");
-        let catLabel = cat ? `<span style="background:${cat.color||'#ddd'};color:#111;padding:1px 6px;border-radius:5px;font-size:0.93em;margin-right:2px;">${cat.code}</span>` : '';
-        trhtml += `<td style="vertical-align:top;min-width:108px;">
-          <div id="${id}" class="studyplan-subj" style="background:#fff;border-radius:9px;border:1.5px solid #e0e0e0;box-shadow:0 1px 3px #0001;padding:5px 7px 5px 7px;margin-bottom:4px;font-size:0.97em;line-height:1.4;position:relative;">
-            ${catLabel}
-            <b>${subj.code_en}</b>
-            <span style="color:#1976d2;">(${subj.credit})</span>
-            ${subj.name_th?'<div style="color:#888;font-size:0.92em;">'+subj.name_th+'</div>':''}
-            ${
-              (subj.prereq && subj.prereq.length)
-              ? `<div style="font-size:0.85em;color:#c62828;margin-top:2px;">บังคับก่อน: ${subj.prereq.join(', ')}</div>`
-              : ''
+      let categoryTree = [
+        { id:"1", code:"1", name:"หมวดใหญ่", description:"หมวดหลักทั้งหมด", color:"#2196f3", children:[
+          { id:"1.1", code:"1.1", name:"หมวดย่อย", description:"หมวดเน้นเฉพาะทาง", color:"#f44336", children:[
+            { id:"1.1.1", code:"1.1.1", name:"หมวดย่อยย่อย", description:"พื้นฐาน", color:"#ffb300", children:[] }
+          ]}
+        ]}
+      ];
+      function renderCatTree() {
+        const ul = document.getElementById('cat-tree');
+        ul.innerHTML = '';
+        function walk(nodes, parentUl) {
+          nodes.forEach(node => {
+            const li = document.createElement('li');
+            li.draggable = true;
+            li.ondragstart = e => { e.dataTransfer.setData("catid", node.id); };
+            li.ondragover = e => { e.preventDefault(); li.classList.add("drag-over"); }
+            li.ondragleave = e => { li.classList.remove("drag-over"); }
+            li.ondrop = e => {
+              e.preventDefault();
+              li.classList.remove("drag-over");
+              const dragId = e.dataTransfer.getData("catid");
+              if (dragId!==node.id) moveCategory(dragId, node.id);
+            };
+            li.innerHTML = `
+              <span class="cat-color-block" style="background:${node.color||'#2196f3'}"></span>
+              <b>${node.code}</b>: ${node.name}
+              ${node.description ? '<span class="cat-desc">- '+node.description+'</span>' : ''}
+              <button onclick="showCategoryModal('${node.id}')">✏️</button>
+              <button onclick="deleteCategory('${node.id}')">🗑</button>
+              <button onclick="showCategoryModal('${node.id}')">➕</button>`;
+            li.querySelectorAll('button')[2].onclick = (ev)=>{ ev.stopPropagation(); showCategoryModal(node.id); addCategory(node.id);}
+            if (node.children.length) {
+              const childUl = document.createElement('ul');
+              walk(node.children, childUl);
+              li.appendChild(childUl);
             }
-          </div>
-        </td>`;
-      } else {
-        trhtml += '<td></td>';
-      }
-      cellIdx++;
-    }
-    trhtml += '</tr>';
-  }
-  document.getElementById('studyplan-maxrow').outerHTML = trhtml;
-
-  // ------------- วาดเส้น arrow (SVG) หลังจาก dom render แล้ว -------------
-  setTimeout(()=>{
-    const svg = document.getElementById('studyplan-arrows');
-    svg.innerHTML = '';
-    // ดึงตำแหน่งของทุกกล่อง
-    let rectMap = {};
-    document.querySelectorAll('.studyplan-subj').forEach(div=>{
-      const rect = div.getBoundingClientRect();
-      // ตำแหน่งใน SVG (ต้องลบ offset พ่อ)
-      const svgRect = svg.getBoundingClientRect();
-      rectMap[div.id] = {
-        x: rect.left - svgRect.left + rect.width/2,
-        y: rect.top - svgRect.top + rect.height/2,
-        width: rect.width,
-        height: rect.height
-      };
-    });
-
-    // loop วิชาทุกตัว หาวิชาบังคับก่อน (prereq)
-    Object.entries(cellIdMap).forEach(([id, info])=>{
-      const div = document.getElementById(id);
-      if(!div) return;
-      let subjData = null;
-      // หา subjectData จาก .studyplan-subj
-      try {
-        // จากข้อมูลใน dom
-        let code = info.code;
-        let y = info.y, t = info.t, r = info.r;
-        let subj = null;
-        document.querySelectorAll('.studyplan-subj').forEach(d=>{
-          if(d.id===id) {
-            // ดึงรหัส code_en
-            const html = d.innerHTML;
-            const m = html.match(/<b>(.*?)<\/b>/);
-            if(m) code = m[1];
-          }
-        });
-        // หาในข้อมูล planner
-        subjData = null;
-        for(let key in plan) {
-          subjData = plan[key].find(subj=>subj.code_en===code);
-          if(subjData) break;
+            parentUl.appendChild(li);
+          });
         }
-      } catch(e){}
-      if(subjData && subjData.prereq && subjData.prereq.length) {
-        subjData.prereq.forEach(pr=>{
-          // หาจุดปลาย: ให้หา cell ล่าสุดของรหัสนั้นใน subjectPos
-          let fromIds = subjectPos[pr];
-          if(!fromIds) return;
-          let fromId = fromIds[fromIds.length-1]; // เอาวิชาบังคับก่อนตัวล่าสุดที่เจอในตาราง
-          let from = rectMap[fromId];
-          let to = rectMap[id];
-          if(from && to) {
-            // วาดเส้นโค้งเบา ๆ
-            let path = drawArrow(from.x, from.y, to.x, to.y);
-            svg.innerHTML += path;
-          }
+        walk(categoryTree, ul);
+      }
+      function addCategory(parentId) { showCategoryModal(parentId); }
+      function deleteCategory(id) {
+        if(!confirm("ลบหมวดหมู่และหมวดย่อยทั้งหมดนี้?")) return;
+        removeNode(categoryTree, id);
+        renderCatTree();
+      }
+      function moveCategory(fromId, toId) {
+        const from = removeNode(categoryTree, fromId, true);
+        const target = findNode(categoryTree, toId);
+        if (target && from) target.children.push(from);
+        renderCatTree();
+      }
+      function findNode(nodes, id) {
+        for (let node of nodes) {
+          if (node.id === id) return node;
+          const f = findNode(node.children, id); if(f) return f;
+        }
+        return null;
+      }
+      function removeNode(nodes, id, returnNode) {
+        for (let i=0;i<nodes.length;i++) {
+          if (nodes[i].id === id) return returnNode ? nodes.splice(i,1)[0] : nodes.splice(i,1);
+          const f = removeNode(nodes[i].children, id, returnNode); if(f) return f;
+        }
+      }
+      function fillCategoryDefaults(nodes) {
+        nodes.forEach(node => {
+          if (typeof node.description !== "string") node.description = "";
+          if (!node.color) node.color = "#2196f3";
+          if (!Array.isArray(node.children)) node.children = [];
+          fillCategoryDefaults(node.children);
         });
       }
-    });
+      function findCategoryByCode(nodes, code) {
+        for (let node of nodes) {
+          if (node.code === code) return node;
+          const f = findCategoryByCode(node.children, code); if(f) return f;
+        }
+        return null;
+      }
+      renderCatTree();
 
-    // --- helper ฟังก์ชันวาด arrow ---
-    function drawArrow(x1, y1, x2, y2) {
-      // ดัดเล็กน้อย ถ้าอยู่คนละปี/เทอม
-      let dx = x2-x1, dy = y2-y1;
-      let cx1 = x1 + dx*0.25, cy1 = y1 + dy*0.05;
-      let cx2 = x1 + dx*0.75, cy2 = y1 + dy*0.95;
-      let color = "#1976d2";
-      return `<path d="M${x1},${y1} C${cx1},${cy1} ${cx2},${cy2} ${x2},${y2}" stroke="${color}" fill="none" stroke-width="2" marker-end="url(#arrowhead)" opacity="0.6"/>
-      `;
-    }
-    // เพิ่ม marker arrowhead
-    if(!svg.querySelector('defs')) {
-      svg.innerHTML = `<defs>
-        <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth">
-          <polygon points="0 0, 8 3.5, 0 7" fill="#1976d2"/>
-        </marker>
-      </defs>` + svg.innerHTML;
-    }
-  },200); // delay สั้น ๆ ให้ layout ตายตัวก่อน
+      // =============== TABEE Tree Editor (local) ===============
+      let editingTabeeId = null, editingTabeeParentId = null;
+      function showTabeeModal(parentOrId) {
+        editingTabeeParentId = null; editingTabeeId = null;
+        let isEdit = false, node = null;
+        if (parentOrId && typeof parentOrId === "string") {
+          editingTabeeId = parentOrId;
+          node = findNode(tabeeTree, parentOrId);
+          isEdit = true;
+          document.getElementById('tabee-modal-title').textContent = "✏️ แก้ไข TABEE";
+          document.getElementById('tabee-code').value = node.code || "";
+          document.getElementById('tabee-name').value = node.name || "";
+          document.getElementById('tabee-desc').value = node.description || "";
+          document.getElementById('tabee-color').value = node.color || "#43a047";
+        } else {
+          editingTabeeParentId = parentOrId;
+          document.getElementById('tabee-modal-title').textContent = "➕ เพิ่ม TABEE";
+          document.getElementById('tabee-code').value = "";
+          document.getElementById('tabee-name').value = "";
+          document.getElementById('tabee-desc').value = "";
+          document.getElementById('tabee-color').value = "#43a047";
+        }
+        document.getElementById('tabee-modal').style.display = 'block';
+      }
+      function closeTabeeModal() {
+        document.getElementById('tabee-modal').style.display = 'none';
+      }
+      function saveTabeeModal() {
+        const code = document.getElementById('tabee-code').value.trim();
+        const name = document.getElementById('tabee-name').value.trim();
+        const desc = document.getElementById('tabee-desc').value.trim();
+        const color = document.getElementById('tabee-color').value;
+        if (!code || !name) return alert("กรุณากรอกเลข TABEE และชื่อ TABEE");
+        if (editingTabeeId) {
+          let node = findNode(tabeeTree, editingTabeeId);
+          node.code = code; node.name = name; node.description = desc; node.color = color;
+        } else {
+          const newNode = { id: Date.now()+"", code, name, description: desc, color, children:[] };
+          if (!editingTabeeParentId) tabeeTree.push(newNode);
+          else {
+            const parent = findNode(tabeeTree, editingTabeeParentId);
+            parent.children.push(newNode);
+          }
+        }
+        closeTabeeModal(); renderTabeeTree();
+      }
+      let tabeeTree = [
+        { id:"A", code:"A", name:"มาตรฐานหลัก", description:"ตัวอย่างหมวด TABEE", color:"#43a047", children:[
+          { id:"A1", code:"A1", name:"พื้นฐาน", description:"พื้นฐาน", color:"#00bcd4", children:[] }
+        ]}
+      ];
+      function renderTabeeTree() {
+        const ul = document.getElementById('tabee-tree');
+        ul.innerHTML = '';
+        function walk(nodes, parentUl) {
+          nodes.forEach(node => {
+            const li = document.createElement('li');
+            li.draggable = true;
+            li.ondragstart = e => { e.dataTransfer.setData("tabeeid", node.id); };
+            li.ondragover = e => { e.preventDefault(); li.classList.add("drag-over"); }
+            li.ondragleave = e => { li.classList.remove("drag-over"); }
+            li.ondrop = e => {
+              e.preventDefault();
+              li.classList.remove("drag-over");
+              const dragId = e.dataTransfer.getData("tabeeid");
+              if (dragId!==node.id) moveTabee(dragId, node.id);
+            };
+            li.innerHTML = `
+              <span class="tabee-color-block" style="background:${node.color||'#43a047'}"></span>
+              <b>${node.code}</b>: ${node.name}
+              ${node.description ? '<span class="tabee-desc">- '+node.description+'</span>' : ''}
+              <button onclick="showTabeeModal('${node.id}')">✏️</button>
+              <button onclick="deleteTabee('${node.id}')">🗑</button>
+              <button onclick="showTabeeModal('${node.id}')">➕</button>`;
+            li.querySelectorAll('button')[2].onclick = (ev)=>{ ev.stopPropagation(); showTabeeModal(node.id); addTabee(node.id);}
+            if (node.children.length) {
+              const childUl = document.createElement('ul');
+              walk(node.children, childUl);
+              li.appendChild(childUl);
+            }
+            parentUl.appendChild(li);
+          });
+        }
+        walk(tabeeTree, ul);
+      }
+      function addTabee(parentId) { showTabeeModal(parentId); }
+      function deleteTabee(id) {
+        if(!confirm("ลบ TABEE และลูกทั้งหมดนี้?")) return;
+        removeNode(tabeeTree, id);
+        renderTabeeTree();
+      }
+      function moveTabee(fromId, toId) {
+        const from = removeNode(tabeeTree, fromId, true);
+        const target = findNode(tabeeTree, toId);
+        if (target && from) target.children.push(from);
+        renderTabeeTree();
+      }
+      function fillTabeeDefaults(nodes) {
+        nodes.forEach(node => {
+          if (typeof node.description !== "string") node.description = "";
+          if (!node.color) node.color = "#43a047";
+          if (!Array.isArray(node.children)) node.children = [];
+          fillTabeeDefaults(node.children);
+        });
+      }
+      function findTabeeByCode(nodes, code) {
+        for (let node of nodes) {
+          if (node.code === code) return node;
+          const f = findTabeeByCode(node.children, code); if(f) return f;
+        }
+        return null;
+      }
+      renderTabeeTree();
 
-  // --- แสดง modal ---
-  document.getElementById('studyplan-modal').style.display = 'block';
-}
+      // =============== CURRICULUM PLANNER (เหมือนเดิม + tabee) ===============
+      const years = [1, 2, 3, 4];
+      const semesters = ["ภาคต้น", "ภาคปลาย", "ฤดูร้อน"];
+      const plannerDiv = document.getElementById("planner");
+      const subjectPool = document.getElementById("subject-pool");
+      const addButton = document.getElementById("add-subject-btn");
+      let editTarget = null;
+      const addMultiBtn = document.getElementById("add-multi-btn");
+      const addMultiModal = document.getElementById("add-multi-modal");
+      const multiInput = document.getElementById("multi-input");
+      addMultiBtn.onclick = function() {
+        addMultiModal.style.display = "block";
+        multiInput.value = "";
+        multiInput.focus();
+      };
+      function closeMulti() { addMultiModal.style.display = "none"; }
+      function submitMulti() {
+        const lines = multiInput.value.split("\n").map(l=>l.trim()).filter(Boolean);
+        let success = 0;
+        lines.forEach(line => {
+          const m = line.match(/^([A-Za-z0-9_\-]+)\s+([\d.]+)$/);
+          if (m) {
+            addSubject({
+              code_en: m[1], code_th: "", name_en: "", name_th: "",
+              credit: m[2], prereq: [], category: "", tabee: "", description: ""
+            });
+            success++;
+          }
+        });
+        closeMulti();
+        if (!success) alert("รูปแบบไม่ถูกต้อง ตัวอย่างที่ถูกต้อง: CN101 3");
+      }
+      const addFullMultiBtn = document.getElementById("add-fullmulti-btn");
+      const addFullMultiModal = document.getElementById("add-fullmulti-modal");
+      const fullMultiInput = document.getElementById("fullmulti-input");
+      addFullMultiBtn.onclick = function() {
+        addFullMultiModal.style.display = "block";
+        fullMultiInput.value = "";
+        fullMultiInput.focus();
+      };
+      function closeFullMulti() { addFullMultiModal.style.display = "none"; }
+      function parseCSVLine(line) {
+        const result = [];
+        let cur = '';
+        let inQuote = false;
+        for (let i = 0; i < line.length; i++) {
+          const c = line[i];
+          if (c === '"') inQuote = !inQuote;
+          else if (c === ',' && !inQuote) { result.push(cur.trim()); cur = ''; }
+          else cur += c;
+        }
+        result.push(cur.trim());
+        return result.map(s => s.replace(/^"(.*)"$/,'$1'));
+      }
+      function submitFullMulti() {
+        const lines = fullMultiInput.value.split("\n").map(l=>l.trim()).filter(Boolean);
+        let success = 0, fail = 0;
+        lines.forEach(line => {
+          const arr = parseCSVLine(line);
+          if (arr.length >= 9) {
+            addSubject({
+              code_en: arr[0] || "",
+              code_th: arr[1] || "",
+              name_en: arr[2] || "",
+              name_th: arr[3] || "",
+              credit: arr[4] || "3",
+              prereq: arr[5] ? arr[5].split('|').map(s=>s.trim()).filter(Boolean) : [],
+              category: arr[6] || "",
+              tabee: arr[7] || "",
+              description_th: arr[8] || "",
+              description_en: arr[9] || ""
+            });
+            success++;
+          } else {
+            fail++;
+          }
+        });
+        closeFullMulti();
+        if (!success) alert("ไม่มีรายการที่เพิ่มได้ กรุณาตรวจสอบรูปแบบข้อมูล");
+        else if (fail) alert("บางรายการเพิ่มไม่สำเร็จ ("+fail+" บรรทัด)");
+      }
+      addButton.addEventListener("click", () => {
+        const code_en = prompt("กรุณากรอกรหัสวิชา(EN):", "SUBJ1234");
+        if (!code_en) return;
+        addSubject({
+          code_en: code_en, code_th: "", name_en: "", name_th: "",
+          credit: 3, prereq: [], category: "", tabee: "", description: ""
+        });
+      });
+      subjectPool.addEventListener("dragover", e => {
+        e.preventDefault();
+        subjectPool.classList.add("drag-over");
+      });
+      subjectPool.addEventListener("dragleave", () => subjectPool.classList.remove("drag-over"));
+      subjectPool.addEventListener("drop", e => {
+        e.preventDefault();
+        const id = e.dataTransfer.getData("text/plain");
+        const dragged = document.getElementById(id);
+        if (dragged) subjectPool.appendChild(dragged);
+        subjectPool.classList.remove("drag-over");
+      });
+      years.forEach(year => {
+        const label = document.createElement("div");
+        label.className = "year-label";
+        label.textContent = `ปี ${year}`;
+        plannerDiv.appendChild(label);
+        const headerRow = document.createElement("div");
+        headerRow.className = "grid";
+        semesters.forEach(term => {
+          const header = document.createElement("div");
+          header.textContent = term;
+          header.style.fontWeight = "bold";
+          header.style.textAlign = "center";
+          header.style.paddingBottom = "5px";
+          headerRow.appendChild(header);
+        });
+        plannerDiv.appendChild(headerRow);
+        const row = document.createElement("div");
+        row.className = "grid";
+        semesters.forEach((term, index) => {
+          const column = document.createElement("div");
+          column.className = "semester";
+          column.dataset.year = year;
+          column.dataset.term = index + 1;
+          column.addEventListener("dragover", e => {
+            e.preventDefault();
+            column.classList.add("drag-over");
+          });
+          column.addEventListener("dragleave", () => column.classList.remove("drag-over"));
+          column.addEventListener("drop", e => {
+            e.preventDefault();
+            const id = e.dataTransfer.getData("text/plain");
+            const dragged = document.getElementById(id);
+            if (dragged) column.appendChild(dragged);
+            column.classList.remove("drag-over");
+          });
+          row.appendChild(column);
+        });
+        plannerDiv.appendChild(row);
+      });
+      function updateCredits() {
+        // ต่อแต่ละเทอม
+        document.querySelectorAll('.semester').forEach(col => {
+          let sum = 0;
+          col.querySelectorAll('.item').forEach(item => {
+            let data = JSON.parse(item.dataset.detail||'{}');
+            let cred = parseFloat(data.credit||0);
+            sum += isNaN(cred) ? 0 : cred;
+          });
+          let old = col.querySelector('.credit-summary');
+          if (old) old.remove();
+          if (sum > 0) {
+            let label = document.createElement('div');
+            label.className = 'credit-summary';
+            label.style = 'margin-top:6px;font-size:0.92em;color:#1976d2;font-weight:bold;text-align:right;';
+            label.textContent = `รวม ${sum} หน่วยกิต`;
+            col.appendChild(label);
+          }
+        });
+        // รวมทุกเทอม
+        let total = 0;
+        document.querySelectorAll('.semester').forEach(col => {
+          col.querySelectorAll('.item').forEach(item => {
+            let data = JSON.parse(item.dataset.detail||'{}');
+            let cred = parseFloat(data.credit||0);
+            total += isNaN(cred) ? 0 : cred;
+          });
+        });
+        // แสดงด้านล่างสุด
+        let sumdiv = document.getElementById('sum-credit-total');
+        if (!sumdiv) {
+          sumdiv = document.createElement('div');
+          sumdiv.id = 'sum-credit-total';
+          sumdiv.style = 'margin:30px 0 8px 0;padding:8px 18px;background:#fffbe8;border-radius:12px;font-size:1.1em;font-weight:bold;color:#ff9800;box-shadow:0 1px 4px #0002;text-align:right;';
+          plannerDiv.appendChild(sumdiv);
+        }
+        sumdiv.textContent = `หน่วยกิตรวมทั้งหมด ${total} หน่วยกิต`;
+      }
+      // Call updateCredits after any changes
+      setInterval(updateCredits, 1000);
+
+      function exportAll() {
+        const plan = {};
+        document.querySelectorAll('.semester, .subject-pool').forEach(container => {
+          const key = container.id || `y${container.dataset.year}_t${container.dataset.term}`;
+          plan[key] = [];
+          container.querySelectorAll('.item').forEach(item => {
+            plan[key].push(JSON.parse(item.dataset.detail));
+          });
+        });
+        document.getElementById('json-text').value = JSON.stringify({
+          plan: plan,
+          categories: categoryTree,
+          tabeeTree: tabeeTree
+        }, null, 2);
+        document.getElementById('json-modal-title').textContent = '📤 ส่งออก JSON (คัดลอกข้อมูลไว้)';
+        document.getElementById('json-modal').style.display = 'block';
+      }
+      function showImport() {
+        document.getElementById('json-text').value = '';
+        document.getElementById('json-modal-title').textContent = '📥 วาง JSON ที่ต้องการนำเข้า';
+        document.getElementById('json-modal').style.display = 'block';
+      }
+      function closeJsonModal() {
+        document.getElementById('json-modal').style.display = 'none';
+      }
+      function applyImport() {
+        const json = document.getElementById('json-text').value;
+        try {
+          const data = JSON.parse(json);
+          if(data.plan) {
+            document.querySelectorAll('.semester, .subject-pool').forEach(container => {
+              container.innerHTML = '';
+            });
+            for (const key in data.plan) {
+              const container = document.getElementById(key) || document.querySelector(`[data-year="${key[1]}"][data-term="${key[4]}"]`);
+              if (container) {
+                data.plan[key].forEach(subj => addSubject(subj, container));
+              }
+            }
+          }
+          if(data.categories) {
+            fillCategoryDefaults(data.categories); // Compatibility!
+            categoryTree = data.categories;
+            renderCatTree();
+          }
+          if(data.tabeeTree) {
+            fillTabeeDefaults(data.tabeeTree);
+            tabeeTree = data.tabeeTree;
+            renderTabeeTree();
+          }
+          refreshAllSubjectItems();
+          closeJsonModal();
+        } catch (e) {
+          alert("รูปแบบ JSON ไม่ถูกต้อง");
+        }
+      }
+      function showEditModal(item) {
+        editTarget = item;
+        const data = JSON.parse(item.dataset.detail);
+        document.getElementById('edit-code-en').value = data.code_en || "";
+        document.getElementById('edit-code-th').value = data.code_th || "";
+        document.getElementById('edit-name-en').value = data.name_en || "";
+        document.getElementById('edit-name-th').value = data.name_th || "";
+        document.getElementById('edit-credit').value = data.credit || "";
+        document.getElementById('edit-prereq').value = (data.prereq || []).join(",");
+        document.getElementById('edit-category').value = data.category || "";
+        document.getElementById('edit-tabee').value = data.tabee || "";
+        document.getElementById('edit-description-th').value = data.description_th || "";
+        document.getElementById('edit-description-en').value = data.description_en || "";
+        document.getElementById('subject-edit-modal').style.display = 'block';
+      }
+      function closeEditModal() {
+        document.getElementById('subject-edit-modal').style.display = 'none';
+      }
+      document.getElementById('edit-subject-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (!editTarget) return;
+        const data = {
+          code_en: document.getElementById('edit-code-en').value,
+          code_th: document.getElementById('edit-code-th').value,
+          name_en: document.getElementById('edit-name-en').value,
+          name_th: document.getElementById('edit-name-th').value,
+          credit: document.getElementById('edit-credit').value,
+          prereq: document.getElementById('edit-prereq').value.split(',').map(p => p.trim()).filter(Boolean),
+          category: document.getElementById('edit-category').value,
+          tabee: document.getElementById('edit-tabee').value,
+          description_th: document.getElementById('edit-description-th').value,
+          description_en: document.getElementById('edit-description-en').value
+        };
+        editTarget.dataset.detail = JSON.stringify(data);
+        renderSubjectItem(editTarget, data);
+        closeEditModal();
+      });
+      function renderSubjectItem(item, data) {
+        item.innerHTML = "";
+        let categoryTag = "";
+        if (data.category) {
+          let cat = findCategoryByCode(categoryTree, data.category);
+          if (cat) {
+            categoryTag = `<span style="background:${cat.color||'#eee'};color:#222;padding:2px 7px;border-radius:6px;margin-right:3px;font-size:0.8em;">${cat.code}</span>`;
+          }
+        }
+        let tabeeTag = "";
+        if (data.tabee) {
+          let t = findTabeeByCode(tabeeTree, data.tabee);
+          if (t) {
+            tabeeTag = `<span style="background:${t.color||'#eee'};color:#222;padding:2px 7px;border-radius:6px;margin-right:3px;font-size:0.8em;">${t.code}</span>`;
+          }
+        }
+
+        item.innerHTML = tabeeTag + categoryTag + `
+          <div style="font-weight:bold;">${data.code_en} (${data.credit})</div>
+      <div style="font-size:0.85em;color:#333;">
+        ${data.name_th ? data.name_th : 'ชื่อวิชาภาษาไทย'}
+      </div>
+      <div style="font-size:0.80em;color:#666;">
+        ${data.name_en ? data.name_en : 'English Subject Name'}
+      </div>
+
+        `;
+
+        let desc_th = data.description_th || "";
+        let desc_en = data.description_en || "";
+        let desc_merge = "";
+        if(desc_th && desc_en) {
+          desc_merge = desc_th + "\n---\n" + desc_en;
+        } else if(desc_th) {
+          desc_merge = desc_th;
+        } else if(desc_en) {
+          desc_merge = desc_en;
+        } else {
+          desc_merge = "-";
+        }
+
+        let tooltip =
+          `${data.code_th||'-'} - ${data.name_th||'-'}\n${data.code_en||'-'} - ${data.name_en||'-'}\n` +
+          `${data.credit||'-'} หน่วยกิต | หมวด: ${data.category||'-'} | TABEE: ${data.tabee||'-'}\n` +
+          `วิชาบังคับก่อน: ${(data.prereq||[]).join(', ')}\n` +
+          `คำอธิบาย:\n${desc_merge}`;
+
+        item.setAttribute("data-tooltip", tooltip);
+        item.setAttribute("data-code", data.code_en);
+
+      // ปุ่มเลื่อนขึ้น ▲
+      const upBtn = document.createElement("button");
+      upBtn.textContent = "▲";
+      upBtn.style.marginLeft = "4px";
+      upBtn.onclick = (e) => {
+        e.stopPropagation();
+        moveSubjectItem(item, 'up');
+      };
+      item.appendChild(upBtn);
+
+      // ปุ่มเลื่อนลง ▼
+      const downBtn = document.createElement("button");
+      downBtn.textContent = "▼";
+      downBtn.style.marginLeft = "2px";
+      downBtn.onclick = (e) => {
+        e.stopPropagation();
+        moveSubjectItem(item, 'down');
+      };
+      item.appendChild(downBtn);
+
+      // ปุ่มแก้ไข ✏️ (ของเดิม)
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "✏️";
+      editBtn.style.marginLeft = "4px";
+      editBtn.onclick = (e) => { e.stopPropagation(); showEditModal(item); };
+      item.appendChild(editBtn);
 
 
-// สร้าง object: { รหัสหมวด: index ตามลำดับ tree }
-function buildCategoryOrderMap(tree) {
-  let map = {};
-  let idx = 0;
-  function walk(nodes) {
-    nodes.forEach(node => {
-      map[node.code] = idx++;
-      if(node.children && node.children.length) walk(node.children);
-    });
-  }
-  walk(tree);
-  return map;
-}
+      }
 
-function saveJsonToFile() {
-  const text = document.getElementById('json-text').value;
-  const blob = new Blob([text], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'curriculum_data.json';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-  }, 100);
-}
+      function moveSubjectItem(item, direction) {
+        const parent = item.parentNode;
+        if (direction === 'up') {
+          const prev = item.previousElementSibling;
+          if (prev) {
+            parent.insertBefore(item, prev);
+          }
+        } else if (direction === 'down') {
+          const next = item.nextElementSibling;
+          if (next) {
+            parent.insertBefore(next, item);
+          }
+        }
+      }
 
-function loadJsonFromFile(input) {
-  if (input.files && input.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      document.getElementById('json-text').value = e.target.result;
-    };
-    reader.readAsText(input.files[0]);
-    // reset เพื่อเลือกไฟล์เดิมซ้ำได้
-    input.value = '';
-  }
-}
+      function addSubject(subjectData, container = null) {
+        const data = {
+          code_en: subjectData.code_en || "",
+          code_th: subjectData.code_th || "",
+          name_en: subjectData.name_en || "",
+          name_th: subjectData.name_th || "",
+          credit: subjectData.credit || "3",
+          prereq: subjectData.prereq || [],
+          category: subjectData.category || "",
+          tabee: subjectData.tabee || "",
+          description_th: subjectData.description_th || "",
+           description_en: subjectData.description_en || ""
+        };
+        const item = document.createElement("div");
+        item.className = "item";
+        item.id = `item-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+        item.dataset.detail = JSON.stringify(data);
+        item.draggable = true;
+        item.addEventListener("dragstart", e => {
+          e.dataTransfer.setData("text/plain", item.id);
+        });
+        renderSubjectItem(item, data);
+        (container || subjectPool).appendChild(item);
+      }
+      ["MATH101", "PHYS101", "ENGL101", "COMP101", "SCIE101", "PE101"].forEach(code =>
+        addSubject({ code_en: code, code_th: "", name_en: "", name_th: "", credit: 3, prereq: [], category: "", tabee:"", description_th: "",description_en:"" })
+      );
+
+      function showCurriculumReport() {
+        let allSubjects = [];
+        document.querySelectorAll('.item').forEach(item=>{
+          try { allSubjects.push(JSON.parse(item.dataset.detail)); } catch(e){}
+        });
+
+        function renderCatReport(nodes, indent=0) {
+          let html = '';
+          let sumAll = 0;
+          nodes.forEach(cat => {
+            let inCat = allSubjects.filter(subj => subj.category === cat.code);
+            let sum = inCat.reduce((s,subj)=>s+parseFloat(subj.credit||0), 0);
+            let childHtml = '';
+            let childSum = 0;
+            if (cat.children && cat.children.length) {
+              cat.children.forEach(child => {
+                let r = renderCatReport([child], indent+1);
+                childHtml += r.html;
+                childSum += r.sum;
+              });
+            }
+            let total = sum + childSum;
+            sumAll += total;
+
+            html += `<div style="margin-left:${indent*24}px; margin-bottom:8px;">
+              <span style="
+                display:inline-block;
+                width:16px; height:16px;
+                border-radius:50%;
+                background:${cat.color||'#ddd'};
+                vertical-align:middle;
+                margin-right:8px;
+                box-shadow:0 1px 2px #0002;
+              "></span>
+              <span style="font-weight:bold;font-size:1em;color:#222;">
+                ${cat.code} ${cat.name}
+              </span>
+              <span style="color:#f57c00; font-weight:bold; margin-left:7px; font-size:1em;">
+                (รวมหมวดนี้และลูก: ${total} หน่วยกิต)
+              </span>
+              ${cat.description? `<div style="color:#888; margin-left:5px; margin-bottom:2px; font-size:0.95em;">${cat.description}</div>`:""}
+              ${inCat.length ? `<ul style="margin:5px 0 4px 20px;">${inCat.map(subj=>`
+                <li>
+                  <b>${subj.code_en}</b>
+                  <span style="color:#2196f3;">(${subj.credit} หน่วยกิต)</span>
+                  ${subj.name_th? ' - '+subj.name_th : '' }
+                </li>
+              `).join('')}</ul>` : ""}
+              ${childHtml}
+            </div>`;
+          });
+          return { html, sum: sumAll };
+        }
+
+        // ตรงนี้คือจุดสำคัญ!
+        const report = renderCatReport(categoryTree);
+
+        document.getElementById('report-content').innerHTML = `
+          <div style="font-size:1.12em;font-weight:bold;color:#388e3c;margin-bottom:18px;">
+            ✨ หน่วยกิตรวมทั้งหลักสูตร: <span style="color:#e65100">${report.sum}</span> หน่วยกิต
+          </div>
+          ${report.html}
+        `;
+        document.getElementById('report-modal').style.display = 'block';
+      }
+
+      function closeCurriculumReport() {
+        document.getElementById('report-modal').style.display = 'none';
+      }
+
+      function refreshAllSubjectItems() {
+        document.querySelectorAll('.item').forEach(item => {
+          try {
+            let data = JSON.parse(item.dataset.detail);
+            renderSubjectItem(item, data);
+          } catch (e) {}
+        });
+      }
+
+      function exportCurriculumStructureExcel() {
+        // ดึงทุก subject ปัจจุบัน
+        let allSubjects = [];
+        document.querySelectorAll('.item').forEach(item=>{
+          try { allSubjects.push(JSON.parse(item.dataset.detail)); } catch(e){}
+        });
+
+        // helper: Flatten หมวด/รายวิชาเป็นแถว ๆ
+        function flattenCat(nodes, indent=0, parentCodes=[]) {
+          let rows = [];
+          nodes.forEach(cat => {
+            let inCat = allSubjects.filter(subj => subj.category === cat.code);
+            let sum = inCat.reduce((s,subj)=>s+parseFloat(subj.credit||0), 0);
+
+            // ลูกหมวด
+            let childRows = [];
+            let childSum = 0;
+            if (cat.children && cat.children.length) {
+              cat.children.forEach(child => {
+                let r = flattenCat([child], indent+1, parentCodes.concat(cat.code));
+                childRows = childRows.concat(r.rows);
+                childSum += r.sum;
+              });
+            }
+            let total = sum + childSum;
+
+            // push หมวดนี้
+            rows.push({
+              'หมวด': "  ".repeat(indent) + cat.code + " " + cat.name,
+              'รหัสวิชา': "",
+              'ชื่อวิชา': "",
+              'หน่วยกิต': "",
+              'รวมหน่วยกิต': total,
+              'คำอธิบาย': cat.description_th || cat.description_en || ""
+            });
+            // รายวิชา
+            inCat.forEach(subj => {
+              rows.push({
+                'หมวด': "  ".repeat(indent+1) + "•",
+                'รหัสวิชา': subj.code_en,
+                'ชื่อวิชา': subj.name_th || subj.name_en,
+                'หน่วยกิต': subj.credit,
+                'รวมหน่วยกิต': "",
+                'คำอธิบาย': cat.description_th || cat.description_en || ""
+              });
+            });
+            // ลูกหมวด
+            rows = rows.concat(childRows);
+          });
+          return {rows: rows, sum: rows.length ? rows.filter(r=>r['รวมหน่วยกิต']).map(r=>parseFloat(r['รวมหน่วยกิต']||0)).reduce((a,b)=>a+b,0) : 0};
+        }
+
+        let flat = flattenCat(categoryTree);
+
+        // Sheet header
+        let ws_data = [
+          ['หมวดหมู่', 'รหัสวิชา', 'ชื่อวิชา', 'หน่วยกิต', 'รวมหน่วยกิต', 'คำอธิบาย']
+        ];
+        flat.rows.forEach(row=>{
+          ws_data.push([
+            row['หมวด'], row['รหัสวิชา'], row['ชื่อวิชา'], row['หน่วยกิต'], row['รวมหน่วยกิต'], row['คำอธิบาย']
+          ]);
+        });
+
+        // SheetJS Export
+        let wb = XLSX.utils.book_new();
+        let ws = XLSX.utils.aoa_to_sheet(ws_data);
+        XLSX.utils.book_append_sheet(wb, ws, "โครงสร้างหลักสูตร");
+        XLSX.writeFile(wb, "curriculum_structure.xlsx");
+      }
+
+      function showTabeeReport() {
+        let allSubjects = [];
+        document.querySelectorAll('.item').forEach(item=>{
+          try { allSubjects.push(JSON.parse(item.dataset.detail)); } catch(e){}
+        });
+
+        function renderTabeeTree(nodes, indent=0) {
+          let html = '';
+          let sumAll = 0;
+          nodes.forEach(tabee => {
+            let inTabee = allSubjects.filter(subj => subj.tabee === tabee.code);
+            let sum = inTabee.reduce((s,subj)=>s+parseFloat(subj.credit||0), 0);
+            let childHtml = '';
+            let childSum = 0;
+            if (tabee.children && tabee.children.length) {
+              tabee.children.forEach(child => {
+                let r = renderTabeeTree([child], indent+1);
+                childHtml += r.html;
+                childSum += r.sum;
+              });
+            }
+            let total = sum + childSum;
+            sumAll += total;
+            html += `<div style="margin-left:${indent*24}px; margin-bottom:8px;">
+              <span style="
+                display:inline-block;
+                width:16px; height:16px;
+                border-radius:50%;
+                background:${tabee.color||'#ddd'};
+                vertical-align:middle;
+                margin-right:8px;
+                box-shadow:0 1px 2px #0002;
+              "></span>
+              <span style="font-weight:bold;font-size:1em;color:#222;">
+                ${tabee.code} ${tabee.name}
+              </span>
+              <span style="color:#00897b; font-weight:bold; margin-left:7px; font-size:1em;">
+                (รวม TABEE นี้และลูก: ${total} หน่วยกิต)
+              </span>
+              ${tabee.description? `<div style="color:#888; margin-left:5px; margin-bottom:2px; font-size:0.95em;">${tabee.description}</div>`:""}
+              ${inTabee.length ? `<ul style="margin:5px 0 4px 20px;">${inTabee.map(subj=>`
+                <li>
+                  <b>${subj.code_en}</b>
+                  <span style="color:#2196f3;">(${subj.credit} หน่วยกิต)</span>
+                  ${subj.name_th? ' - '+subj.name_th : '' }
+                </li>
+              `).join('')}</ul>` : ""}
+              ${childHtml}
+            </div>`;
+          });
+          return { html, sum: sumAll };
+        }
+
+        const report = renderTabeeTree(tabeeTree);
+        // แสดงใน modal รายงานเดิมหรือ popup ใหม่ก็ได้
+        document.getElementById('report-content').innerHTML = `
+          <div style="font-size:1.12em;font-weight:bold;color:#00796b;margin-bottom:18px;">
+            🌲 หน่วยกิตรวมตามโครงสร้าง TABEE: <span style="color:#e65100">${report.sum}</span> หน่วยกิต
+          </div>
+          ${report.html}
+        `;
+        document.getElementById('report-modal').style.display = 'block';
+      }
+      function exportTabeeStructureExcel() {
+        let allSubjects = [];
+        document.querySelectorAll('.item').forEach(item=>{
+          try { allSubjects.push(JSON.parse(item.dataset.detail)); } catch(e){}
+        });
+
+        function flattenTabee(nodes, indent=0) {
+          let rows = [];
+          nodes.forEach(tabee => {
+            let inTabee = allSubjects.filter(subj => subj.tabee === tabee.code);
+            let sum = inTabee.reduce((s,subj)=>s+parseFloat(subj.credit||0), 0);
+
+            // ลูก
+            let childRows = [];
+            let childSum = 0;
+            if (tabee.children && tabee.children.length) {
+              tabee.children.forEach(child => {
+                let r = flattenTabee([child], indent+1);
+                childRows = childRows.concat(r.rows);
+                childSum += r.sum;
+              });
+            }
+            let total = sum + childSum;
+            rows.push({
+              'TABEE': "  ".repeat(indent) + tabee.code + " " + tabee.name,
+              'รหัสวิชา': "",
+              'ชื่อวิชา': "",
+              'หน่วยกิต': "",
+              'รวมหน่วยกิต': total,
+              'คำอธิบาย': tabee.description || ""
+            });
+            inTabee.forEach(subj => {
+              rows.push({
+                'TABEE': "  ".repeat(indent+1) + "•",
+                'รหัสวิชา': subj.code_en,
+                'ชื่อวิชา': subj.name_th || subj.name_en,
+                'หน่วยกิต': subj.credit,
+                'รวมหน่วยกิต': "",
+                'คำอธิบาย': subj.description_th || "",
+                'คำอธิบาย': subj.description_en || ""
+              });
+            });
+            rows = rows.concat(childRows);
+          });
+          return {rows: rows, sum: rows.length ? rows.filter(r=>r['รวมหน่วยกิต']).map(r=>parseFloat(r['รวมหน่วยกิต']||0)).reduce((a,b)=>a+b,0) : 0};
+        }
+
+        let flat = flattenTabee(tabeeTree);
+
+        let ws_data = [
+          ['TABEE', 'รหัสวิชา', 'ชื่อวิชา', 'หน่วยกิต', 'รวมหน่วยกิต', 'คำอธิบาย']
+        ];
+        flat.rows.forEach(row=>{
+          ws_data.push([
+            row['TABEE'], row['รหัสวิชา'], row['ชื่อวิชา'], row['หน่วยกิต'], row['รวมหน่วยกิต'], row['คำอธิบาย']
+          ]);
+        });
+
+        let wb = XLSX.utils.book_new();
+        let ws = XLSX.utils.aoa_to_sheet(ws_data);
+        XLSX.utils.book_append_sheet(wb, ws, "TABEE Structure");
+        XLSX.writeFile(wb, "tabee_structure.xlsx");
+      }
+
+      function showStudyPlanChart() {
+        const years = [1, 2, 3, 4];
+        const terms = ["ภาคต้น", "ภาคปลาย", "ฤดูร้อน"];
+
+        let plan = {};
+        document.querySelectorAll('.semester, .subject-pool').forEach(container => {
+          const key = container.id || `y${container.dataset.year}_t${container.dataset.term}`;
+          plan[key] = [];
+          container.querySelectorAll('.item').forEach(item => {
+            plan[key].push(JSON.parse(item.dataset.detail));
+          });
+        });
+
+        // เรียงภายใน cell ตามหมวด+รหัส
+      function sortSubjects(subjs) {
+        // map รหัสหมวด → ลำดับที่ชัดเจน
+        const catOrder = buildCategoryOrderMap(categoryTree);
+
+        return subjs.slice().sort((a, b) => {
+          const aIdx = catOrder[a.category] !== undefined ? catOrder[a.category] : 9999;
+          const bIdx = catOrder[b.category] !== undefined ? catOrder[b.category] : 9999;
+          if(aIdx !== bIdx) return aIdx - bIdx;
+          // ลำดับเดียวกันให้เรียงตามรหัสวิชา
+          return (a.code_en || "").localeCompare(b.code_en || "");
+        });
+      }
 
 
-</script>
-</body>
+        // วาดตาราง
+        let table = `<table border="1" cellpadding="4" cellspacing="0" style="border-collapse:collapse;width:100%;background:#fafbfc;position:relative;">
+          <tr>
+            ${years.map(y=>`<th colspan="3" style="background:#1976d2;color:#fff;font-size:1.08em;">ปี ${y}</th>`).join('')}
+          </tr>
+          <tr>
+            ${years.map(_=>terms.map(t=>`<th style="background:#e3e7ef;color:#333;">${t}</th>`).join('')).join('')}
+          </tr>
+          <tr id="studyplan-maxrow"></tr>
+        </table>`;
+        document.getElementById('studyplan-table-wrap').innerHTML = table;
+
+        // วาง subject ลง cell
+        let maxRow = 0;
+        let cellSubs = [];
+        let cellIdMap = {}; // key: code_en + [ปี,เทอม,ลำดับ], value: DOM id
+        for(let y=1;y<=4;y++) {
+          for(let t=1;t<=3;t++) {
+            let key = `y${y}_t${t}`;
+            let arr = plan[key] || [];
+            cellSubs.push(arr);
+            if(arr.length > maxRow) maxRow = arr.length;
+          }
+        }
+        let trhtml = '';
+        let subjectPos = {}; // code_en => [array ของ cell id]
+        let globalIndex = 0;
+        for(let r=0;r<maxRow;r++) {
+          trhtml += '<tr>';
+          let cellIdx = 0;
+          for(let i=0;i<cellSubs.length;i++) {
+            let subj = cellSubs[i][r];
+            if(subj) {
+              // key ของกล่อง: code_en + ปี + เทอม + index
+              let y = Math.floor(i/3)+1;
+              let t = (i%3)+1;
+              let id = `studycell-${subj.code_en}-${y}-${t}-${r}`;
+              if(!subjectPos[subj.code_en]) subjectPos[subj.code_en]=[];
+              subjectPos[subj.code_en].push(id);
+              cellIdMap[id] = { y, t, r, code: subj.code_en };
+              // หา category
+              let cat = findCategoryByCode(categoryTree, subj.category||"");
+              let catLabel = cat ? `<span style="background:${cat.color||'#ddd'};color:#111;padding:1px 6px;border-radius:5px;font-size:0.93em;margin-right:2px;">${cat.code}</span>` : '';
+              trhtml += `<td style="vertical-align:top;min-width:108px;">
+                <div id="${id}" class="studyplan-subj" style="background:#fff;border-radius:9px;border:1.5px solid #e0e0e0;box-shadow:0 1px 3px #0001;padding:5px 7px 5px 7px;margin-bottom:4px;font-size:0.97em;line-height:1.4;position:relative;">
+                  ${catLabel}
+                  <b>${subj.code_en}</b>
+                  <span style="color:#1976d2;">(${subj.credit})</span>
+                  ${subj.name_th?'<div style="color:#888;font-size:0.92em;">'+subj.name_th+'</div>':''}
+                  ${
+                    (subj.prereq && subj.prereq.length)
+                    ? `<div style="font-size:0.85em;color:#c62828;margin-top:2px;">บังคับก่อน: ${subj.prereq.join(', ')}</div>`
+                    : ''
+                  }
+                </div>
+              </td>`;
+            } else {
+              trhtml += '<td></td>';
+            }
+            cellIdx++;
+          }
+          trhtml += '</tr>';
+        }
+        document.getElementById('studyplan-maxrow').outerHTML = trhtml;
+
+        // ------------- วาดเส้น arrow (SVG) หลังจาก dom render แล้ว -------------
+        setTimeout(()=>{
+          const svg = document.getElementById('studyplan-arrows');
+          svg.innerHTML = '';
+          // ดึงตำแหน่งของทุกกล่อง
+          let rectMap = {};
+          document.querySelectorAll('.studyplan-subj').forEach(div=>{
+            const rect = div.getBoundingClientRect();
+            // ตำแหน่งใน SVG (ต้องลบ offset พ่อ)
+            const svgRect = svg.getBoundingClientRect();
+            rectMap[div.id] = {
+              x: rect.left - svgRect.left + rect.width/2,
+              y: rect.top - svgRect.top + rect.height/2,
+              width: rect.width,
+              height: rect.height
+            };
+          });
+
+          // loop วิชาทุกตัว หาวิชาบังคับก่อน (prereq)
+          Object.entries(cellIdMap).forEach(([id, info])=>{
+            const div = document.getElementById(id);
+            if(!div) return;
+            let subjData = null;
+            // หา subjectData จาก .studyplan-subj
+            try {
+              // จากข้อมูลใน dom
+              let code = info.code;
+              let y = info.y, t = info.t, r = info.r;
+              let subj = null;
+              document.querySelectorAll('.studyplan-subj').forEach(d=>{
+                if(d.id===id) {
+                  // ดึงรหัส code_en
+                  const html = d.innerHTML;
+                  const m = html.match(/<b>(.*?)<\/b>/);
+                  if(m) code = m[1];
+                }
+              });
+              // หาในข้อมูล planner
+              subjData = null;
+              for(let key in plan) {
+                subjData = plan[key].find(subj=>subj.code_en===code);
+                if(subjData) break;
+              }
+            } catch(e){}
+            if(subjData && subjData.prereq && subjData.prereq.length) {
+              subjData.prereq.forEach(pr=>{
+                // หาจุดปลาย: ให้หา cell ล่าสุดของรหัสนั้นใน subjectPos
+                let fromIds = subjectPos[pr];
+                if(!fromIds) return;
+                let fromId = fromIds[fromIds.length-1]; // เอาวิชาบังคับก่อนตัวล่าสุดที่เจอในตาราง
+                let from = rectMap[fromId];
+                let to = rectMap[id];
+                if(from && to) {
+                  // วาดเส้นโค้งเบา ๆ
+                  let path = drawArrow(from.x, from.y, to.x, to.y);
+                  svg.innerHTML += path;
+                }
+              });
+            }
+          });
+
+          // --- helper ฟังก์ชันวาด arrow ---
+          function drawArrow(x1, y1, x2, y2) {
+            // ดัดเล็กน้อย ถ้าอยู่คนละปี/เทอม
+            let dx = x2-x1, dy = y2-y1;
+            let cx1 = x1 + dx*0.25, cy1 = y1 + dy*0.05;
+            let cx2 = x1 + dx*0.75, cy2 = y1 + dy*0.95;
+            let color = "#1976d2";
+            return `<path d="M${x1},${y1} C${cx1},${cy1} ${cx2},${cy2} ${x2},${y2}" stroke="${color}" fill="none" stroke-width="2" marker-end="url(#arrowhead)" opacity="0.6"/>
+            `;
+          }
+          // เพิ่ม marker arrowhead
+          if(!svg.querySelector('defs')) {
+            svg.innerHTML = `<defs>
+              <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth">
+                <polygon points="0 0, 8 3.5, 0 7" fill="#1976d2"/>
+              </marker>
+            </defs>` + svg.innerHTML;
+          }
+        },200); // delay สั้น ๆ ให้ layout ตายตัวก่อน
+
+        // --- แสดง modal ---
+        document.getElementById('studyplan-modal').style.display = 'block';
+      }
+
+
+      // สร้าง object: { รหัสหมวด: index ตามลำดับ tree }
+      function buildCategoryOrderMap(tree) {
+        let map = {};
+        let idx = 0;
+        function walk(nodes) {
+          nodes.forEach(node => {
+            map[node.code] = idx++;
+            if(node.children && node.children.length) walk(node.children);
+          });
+        }
+        walk(tree);
+        return map;
+      }
+
+      function saveJsonToFile() {
+        const text = document.getElementById('json-text').value;
+        const blob = new Blob([text], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'curriculum_data.json';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        }, 100);
+      }
+
+      function loadJsonFromFile(input) {
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            document.getElementById('json-text').value = e.target.result;
+          };
+          reader.readAsText(input.files[0]);
+          // reset เพื่อเลือกไฟล์เดิมซ้ำได้
+          input.value = '';
+        }
+      }
+
+      async function preloadJsonFromUrl(url) {
+        try {
+          const res = await fetch(url);
+          if (!res.ok) {
+            alert(`โหลด JSON ไม่สำเร็จ: ${res.statusText}`);
+            return;
+          }
+          const data = await res.json();
+          document.getElementById('json-text').value = JSON.stringify(data, null, 2);
+          applyImport(); // เรียกฟังก์ชันนำเข้าข้อมูลที่คุณมีอยู่แล้ว
+        } catch (e) {
+          alert(`โหลด JSON ไม่สำเร็จ: ${e.message}`);
+        }
+      }
+      window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const jsonUrl = urlParams.get('json');
+        if (jsonUrl) {
+          preloadJsonFromUrl(jsonUrl);
+        }
+      });
+    </script>
+  </body>
 </html>
