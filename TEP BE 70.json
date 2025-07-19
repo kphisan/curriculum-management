@@ -1,0 +1,879 @@
+
+{
+  "plan": {
+    "subject-pool": [],
+    "y1_t1": [
+      {
+        "code_en": "MA111",
+        "code_th": "ค.111",
+        "name_en": "Fundamentals of Calculus",
+        "name_th": "แคลคูลัสพื้นฐาน",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.1.1",
+        "tabee": "A1",
+        "description_th": "อุปนัยเชิงคณิตศาสตร์ ระบบจำนวนและฟังก์ชันเบื้องต้น แคลคูลัสอนุพันธ์และปริพันธ์ของฟังก์ชันตัวแปรเดียว ลิมิต ความต่อเนื่อง อนุพันธ์และการประยุกต์อนุพันธ์ ปฏิยานุพันธ์ เทคนิคการหาปริพันธ์และการประยุกต์ปริพันธ์ ปริพันธ์ไม่ตรงแบบ อนุกรม ทฤษฎีบทเทย์เลอร์สำหรับฟังก์ชันพื้นฐาน การหาปริพันธ์เชิงตัวเลข \nหมายเหตุ: ไม่นับหน่วยกิตให้ผู้ที่กำลังศึกษาหรือสอบได้ ค.211 หรือ ค.216 หรือ ค.218 หรือ คป.101",
+        "description_en": "Mathematical induction, number systems and elementary functions, calculus of one variable functions, limit, continuity, the derivative and its applications, antiderivatives, techniques of  integrations and its applications, improper integrals, series, Taylor’s Theorem for basic functions, numerical integration. Note: No credits for students who are currently taking or have earned credits of MA211 or MA216 or MA218 or AM101."
+      },
+      {
+        "code_en": "SC133",
+        "code_th": "ฟิสิกส์สำหรับวิศวกร 1 ",
+        "name_en": "Physics for Engineers I",
+        "name_th": "ฟิสิกส์สำหรับวิศวกร 1",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.1.1",
+        "tabee": "A1",
+        "description_th": "การเคลื่อนที่ แรง ความโน้มถ่วง งานและพลังงาน การชน การเคลื่อนที่แบบหมุน วัตถุในสภาพสมดุล ความยืดหยุ่นและการแตกร้าว ของไหล การสั่นและคลื่น เสียงและการประยุกต์ ความร้อน และทฤษฎีจลน์ของก๊าซ กฎข้อ 1 และ 2 ของอุณหพลศาสตร์",
+        "description_en": "Motion, force, gravity, work and energy, collisions, rotational motion, bodies in equilibrium, elastic and fractures, fluids, vibrations and waves, sound and applications, heat and the kinetic theory, the first and the second laws of thermodynamics."
+      },
+      {
+        "code_en": "SC123",
+        "code_th": "",
+        "name_en": "Fundamental Chemistry",
+        "name_th": "เคมีพื้นฐาน",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.1.1",
+        "tabee": "A1",
+        "description_th": "โครงสร้างอะตอม ปริมาณสัมพันธ์ พันธะเคมี สมบัติของธาตุเรพริเซนเททีฟและแทรนซิชัน แก๊ส ของเหลว และสารละลาย ของแข็ง อุณหเคมี จลนพลศาสตร์ สมดุลเคมี กรด-เบส เคมีไฟฟ้า",
+        "description_en": "Atomic structure, Stoichiometry, Chemical Bonds, Properties of representative and transition elements, Gases, Liquids and solutions, Solids, Thermochemistry, Chemical kinetics, Chemical equilibrium, Acids and bases and Electrochemistry."
+      },
+      {
+        "code_en": "SC173",
+        "code_th": "วท.173",
+        "name_en": "Fundamental Chemistry Laboratory",
+        "name_th": "ปฏิบัติการเคมีพื้นฐาน",
+        "credit": "1",
+        "prereq": [],
+        "category": "2.1.1",
+        "tabee": "A1",
+        "description_th": "ปฏิบัติการเคมีพื้นฐานเพื่อเสริมความเข้าใจจากวิชา SC123 เช่น การทดลองเกี่ยวกับโครงสร้างอะตอม ปริมาณสาร และปฏิกิริยาเคมี",
+        "description_en": "Experiments related to the contents in SC123."
+      },
+      {
+        "code_en": "EL105",
+        "code_th": "สษ.105",
+        "name_en": "English Communication Skills",
+        "name_th": "ทักษะการสื่อสารทางภาษาอังกฤษ",
+        "credit": "3",
+        "prereq": [],
+        "category": "1.1.3",
+        "tabee": "",
+        "description_th": "พัฒนาทักษะการสื่อสารทางภาษาอังกฤษด้านการฟัง พูด อ่าน และเขียน ฝึกการใช้ภาษา คำศัพท์ และสำนวนในบริบททางวิชาการและสังคม",
+        "description_en": "Development of English communication skills, including listening, speaking, reading and writing. Practice of language, vocabulary and expressions used in academic and social contexts."
+      },
+      {
+        "code_en": "TUXX1",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "3",
+        "prereq": [],
+        "category": "1.1.1",
+        "tabee": "",
+        "description_th": "",
+        "description_en": ""
+      },
+      {
+        "code_en": "TSE102",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "3",
+        "prereq": [],
+        "category": "1.2",
+        "tabee": "",
+        "description_th": "",
+        "description_en": ""
+      },
+      {
+        "code_en": "ME100",
+        "code_th": "วก.100",
+        "name_en": "Engineering Graphics",
+        "name_th": "กราฟิกวิศวกรรม",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.1.2",
+        "tabee": "",
+        "description_th": "ความสำคัญของการเขียนแบบ มาตรฐานการเขียนแบบ เครื่องมือ การเขียนแบบเรขาคณิต ภาพฉาย ภาพตัด ภาพสามมิติ และใช้คอมพิวเตอร์ช่วยเขียนแบบ",
+        "description_en": "The significance of drawing. Instruments and their uses. Lining and lettering. Applied geometry. Orthographic and pictorial drawing. Freehand sketching. Sections and auxiliary views. Computer-aided drawing."
+      }
+    ],
+    "y1_t2": [
+      {
+        "code_en": "MA112",
+        "code_th": "ค.112",
+        "name_en": "Analytic Geometry and Applied Calculus",
+        "name_th": "เรขาคณิตวิเคราะห์และแคลคูลัสประยุกต์",
+        "credit": "3",
+        "prereq": [
+          "MA111"
+        ],
+        "category": "2.1.1",
+        "tabee": "A1",
+        "description_th": "เรขาคณิตวิเคราะห์ พิกัดเชิงขั้ว พีชคณิตของเวกเตอร์ใน 3 มิติ ลิมิต ความต่อเนื่อง อนุพันธ์และปริพันธ์ของฟังก์ชันค่าเวกเตอร์ ปริพันธ์ตามเส้น ปริพันธ์ตามผิว ทฤษฎีบทของกรีน เกาส์ และสโตกส์",
+        "description_en": "Analytic geometry, polar coordinates, vector algebra, limit, continuity, vector calculus, line integrals, surface integrals, Green’s, Gauss’s, and Stokes’ theorems."
+      },
+      {
+        "code_en": "SC134",
+        "code_th": "วท.134",
+        "name_en": "Physics for Engineers II",
+        "name_th": "ฟิสิกส์สำหรับวิศวกร 2",
+        "credit": "3",
+        "prereq": [
+          "SC133"
+        ],
+        "category": "2.1.1",
+        "tabee": "A1",
+        "description_th": "ลักษณะทางกายภาพของอะตอม ทฤษฎีแถบพลังงานในของแข็ง พาหะประจุในสารกึ่งตัวนำ ไดโอด ทรานซิสเตอร์ อุปกรณ์สวิทชิง และวงจรรวม",
+        "description_en": "Atomic physics, energy bands in solids, charge carriers in semiconductors, PN junction diode, bipolar and field-effect transistors, switching devices, microwave devices, and integrated circuit fabrication."
+      },
+      {
+        "code_en": "SC185",
+        "code_th": "วท.185",
+        "name_en": "General Physics Laboratory",
+        "name_th": "ปฏิบัติการฟิสิกส์ทั่วไป",
+        "credit": "1",
+        "prereq": [],
+        "category": "2.1.1",
+        "tabee": "A1",
+        "description_th": "ปฏิบัติการเกี่ยวกับการวัดและความคลาดเคลื่อน กลศาสตร์ คลื่น ไฟฟ้า ทัศนศาสตร์ และฟิสิกส์แผนใหม่",
+        "description_en": "Laboratory practices involving measurement and errors, mechanics, waves, electricity, optics and modern physics."
+      },
+      {
+        "code_en": "CN101",
+        "code_th": "วพ.101",
+        "name_en": "Introduction to Computer Programming",
+        "name_th": "การเขียนโปรแกรมคอมพิวเตอร์เบื้องต้น",
+        "credit": "3",
+        "prereq": [],
+        "category": "1.2",
+        "tabee": "",
+        "description_th": "หลักการพื้นฐานคอมพิวเตอร์ องค์ประกอบคอมพิวเตอร์ การทำงานร่วมกันของฮาร์ดแวร์และซอฟต์แวร์ การเขียนโปรแกรมคอมพิวเตอร์",
+        "description_en": "Computer Concepts, computer components: Hardware and software interaction, Computer programming: Programming practices."
+      },
+      {
+        "code_en": "TUXX2",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "3",
+        "prereq": [],
+        "category": "1.1.2",
+        "tabee": "",
+        "description_th": "",
+        "description_en": ""
+      },
+      {
+        "code_en": "TUXX3",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "3",
+        "prereq": [],
+        "category": "1.1.3",
+        "tabee": "",
+        "description_th": "",
+        "description_en": ""
+      },
+      {
+        "code_en": "CE202",
+        "code_th": "วย.202",
+        "name_en": "Engineering Mechanics – Statics",
+        "name_th": "กลศาสตร์วิศวกรรม – สถิตยศาสตร์",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.1.2",
+        "tabee": "",
+        "description_th": "ระบบของแรง กฎของนิวตัน ความสมดุลของแรง จุดศูนย์กลางของมวล ทฤษฎีของแปปปัส โมเมนต์ความเฉื่อย คาน โมเมนต์ดัด แรงเฉือน ความฝืด งานเสมือน พลศาสตร์เบื้องต้น",
+        "description_en": "Force system, Newton’s law, equilibrium, center of gravity, Pappus’s theorem, moment of inertia, beams, bending moment, shear, friction, virtual work, and intro to dynamics."
+      },
+      {
+        "code_en": "IE121",
+        "code_th": "วอ.121",
+        "name_en": "วัสดุวิศวกรรม ",
+        "name_th": "Engineering Materials ",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.1.2",
+        "tabee": "",
+        "description_th": "ความสัมพันธ์ระหว่าง โครงสร้าง สมบัติ กระบวนการผลิต และการประยุกต์ใช้งานของกลุ่มวิศวกรรมหลัก ได้แก่ โลหะ พอลิเมอร์ เซรามิกซ์ และวัสดุผสม แผนภูมิสมดุล สมบัติทางกล และการเสื่อมสภาพของวัสดุ ",
+        "description_en": "Relationship between structures, properties, production processed and applications of main groups of engineering materials i.e, metals, polymers, Ceramics and composites; phase equilibrium diagrams mechanical properties and materials degradation "
+      }
+    ],
+    "y1_t3": [],
+    "y2_t1": [
+      {
+        "code_en": "MA214",
+        "code_th": "ค.214",
+        "name_en": "Differential Equations",
+        "name_th": "สมการเชิงอนุพันธ์",
+        "credit": "3",
+        "prereq": [
+          "MA112"
+        ],
+        "category": "2.1.1",
+        "tabee": "A1",
+        "description_th": "สมการเชิงอนุพันธ์อันดับหนึ่ง สมการเชิงอนุพันธ์อันดับสอง สมการเชิงอนุพันธ์เชิงเส้นเอกพันธ์ สมการเชิงอนุพันธ์เชิงเส้นไม่เอกพันธ์ สมการเชิงอนุพันธ์อันดับสูง ผลเฉลยในรูปอนุกรมของสมการเชิงอนุพันธ์เชิงเส้น ฟังก์ชันพิเศษ สมการเชิงอนุพันธ์ย่อย การแปลงลาปลาซ สมการเชิงอนุพันธ์สามัญไม่เชิงเส้นเบื้องต้น การประยุกต์ในการแก้ปัญหาทางวิศวกรรม",
+        "description_en": "First order differential equations, second order differential equations, homogeneous linear differential equations, nonhomogeneous linear differential equations, differential equations of higher order, series solutions of linear differential equations, special functions, partial differential equations, the Laplace transform, introduction to nonlinear ordinary differential equations, applications in engineering problem solving."
+      },
+      {
+        "code_en": "LE240",
+        "code_th": "วฟ.240",
+        "name_en": "Electric Circuit Analysis",
+        "name_th": "การวิเคราะห์วงจรไฟฟ้า",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "องค์ประกอบวงจร การวิเคราะห์แบบโหนดและเมช ทฤษฎีวงจร ความเหนี่ยวนำและความจุไฟฟ้า วงจรอันดับหนึ่งและสอง การแสดงด้วยเฟสเซอร์ วงจรกำลัง AC ระบบไฟฟ้าสามเฟส",
+        "description_en": "Circuit element, node and mesh analysis; circuit theorems; resistance, inductance and capacitance; first and second order circuits; phasor diagram; AC power circuits; three-phase systems."
+      },
+      {
+        "code_en": "LE242",
+        "code_th": "วฟ.242",
+        "name_en": "Digital Circuit Design",
+        "name_th": "การออกแบบวงจรดิจิทัล",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "การออกแบบและการสร้างวงจรดิจิทัล ประกอบด้วยหัวข้อ ระบบจำนวน รหัส ลอจิกเกต พีชคณิตบูลีน แผนที่คาร์นอฟ การออกแบบวงจรลอจิกแบบคอมไบเนชั่นนอลและแบบซีเควนเชียล สำหรับการสร้างเป็นวงจรจริงจะเริ่มด้วยวงจรเกตพื้นฐานจนถึงการใช้อุปกรณ์พีแอลดี",
+        "description_en": "The design and implementation of digital circuits. Topics include number representations, codes, logic gates, Boolean algebra, Karnaugh maps, combinational and sequential circuit design. The real implementations begin with basic gates and progress to Programmable Logic Devices (PLD)."
+      },
+      {
+        "code_en": "EI211",
+        "code_th": "อฟ.211",
+        "name_en": "Computational Engineering",
+        "name_th": "การคำนวณงานทางวิศวกรรม",
+        "credit": "1",
+        "prereq": [],
+        "category": "2.1.1",
+        "tabee": "A1",
+        "description_th": "การใช้งานซอฟต์แวร์บนคอมพิวเตอร์เพื่อการคำนวณและการวิเคราะห์ในงานวิศวกรรม เช่น การวิเคราะห์ทางสถิติ การแก้ปัญหาทางวิศวกรรม",
+        "description_en": "Use of computer software for computation and analysis in engineering applications including statistical analysis and engineering problem solving."
+      },
+      {
+        "code_en": "EI200",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.1.1",
+        "tabee": "A1",
+        "description_th": "",
+        "description_en": ""
+      },
+      {
+        "code_en": "TUXX4 ",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "3",
+        "prereq": [],
+        "category": "1.1.4",
+        "tabee": "",
+        "description_th": "",
+        "description_en": ""
+      },
+      {
+        "code_en": "TSEXX3",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "3",
+        "prereq": [],
+        "category": "1.2",
+        "tabee": "",
+        "description_th": "",
+        "description_en": ""
+      }
+    ],
+    "y2_t2": [
+      {
+        "code_en": "LE220",
+        "code_th": "วฟ.220",
+        "name_en": "Electromagnetic Theory",
+        "name_th": "ทฤษฎีสนามแม่เหล็กไฟฟ้า",
+        "credit": "3",
+        "prereq": [
+          "LE240"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "การวิเคราะห์เวคเตอร์ สนามไฟฟ้าสถิตย์ ตัวนำและไดอิเลกตริก ความจุไฟฟ้า กระแสการนำและกระแสการพา ความต้านทาน สนามแม่เหล็กสถิตย์ วัสดุแม่เหล็ก ความเหนี่ยวนำ สนามแม่เหล็กไฟฟ้าที่เปลี่ยนตามเวลา สมการแมกซ์เวล",
+        "description_en": "Vector analysis; electrostatic fields; conductors and dielectrics; capacitance; convection and conduction currents; resistance, magnetostatic fields; magnetic materials; inductance, time-varying electromagnetic fields; Maxwell’s equations."
+      },
+      {
+        "code_en": "LE210",
+        "code_th": "",
+        "name_en": "Signals and Systems",
+        "name_th": "สัญญาณและระบบ",
+        "credit": "3",
+        "prereq": [
+          "MA111"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "สัญญาณและระบบแบบต่อเนื่องทางเวลาและแบบไม่ต่อเนื่องทางเวลา ระบบเชิงเส้นไม่แปรเปลี่ยนตามเวลา การวิเคราะห์ระบบโดยวิธีการแปลงฟูเรียร์ วิธีการแปลงลาปลาซ และวิธีการแปลง Z การประยุกต์สัญญาณและระบบในงานทางวิศวกรรม การวิเคราะห์สัญญาณและระบบโดยเทคนิคแบบทันสมัย",
+        "description_en": "Continuous-time and discrete-time signal and system; linear time-invariant system (LTI); signal analysis using Fourier transform, Laplace transform, and Z-transform; applications of signal and system; modern techniques in signal and system analysis."
+      },
+      {
+        "code_en": "LE211",
+        "code_th": "วฟ.211",
+        "name_en": "Probability Theory and Stochastic Processes",
+        "name_th": "ทฤษฎีความน่าจะเป็นและกระบวนการสุ่ม",
+        "credit": "3",
+        "prereq": [
+          "MA111"
+        ],
+        "category": "2.2.1",
+        "tabee": "A1",
+        "description_th": "หลักการเบื้องต้นของการสุ่มและความไม่แน่นอน ความน่าจะเป็น ตัวแปรสุ่ม กระบวนการสุ่ม การประยุกต์ทางระบบสื่อสาร การประมวลสัญญาณ ระบบควบคุมอัตโนมัติ",
+        "description_en": "Introduction to concepts of randomness and uncertainty: probability, random variables, stochastic processes. Applications to communications, signal processing, and automatic control."
+      },
+      {
+        "code_en": "LE203",
+        "code_th": "วฟ.203",
+        "name_en": "Introduction to Electrical Engineering Laboratory",
+        "name_th": "ปฏิบัติการทางวิศวกรรมไฟฟ้าเบื้องต้น\t",
+        "credit": "1",
+        "prereq": [
+          "LE240"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "วิชาบังคับก่อน:  สอบได้หรือศึกษาพร้อมกับ วฟ.209 หรือ วฟ.240 หรือ วฟ.207\n\tเน้นฝึกทักษะทางไฟฟ้าขั้นพื้นฐาน เรียนรู้หลักการทำงานวิธีใช้งานอุปกรณ์เครื่องมือต่าง ๆ ใน\nการประกอบวงจรไฟฟ้าและอิเล็กทรอนิกส์ เพื่อให้ประกอบวงจรไฟฟ้าเบื้องต้นได้ เรียนรู้อิเล็กทรอนิกส์เบื้องต้น ระบบวิเคราะห์และสามารถแก้ปัญหาทางวงจรไฟฟ้าเบื้องต้นและอิเล็กทรอนิกส์เบื้องต้นได้ เรียนรู้วิธีการใช้ซอฟแวร์บางอย่างในการวิเคราะห์วงจรไฟฟ้าอิเล็กทรอนิกส์เบื้องต้น\n",
+        "description_en": "Prerequisite:  Have earned credits of or taking LE209 or LE240 or LE207 in the \nsame semester\n\tThis course focuses on practicing skills in basic electrical engineering. Learn how \nto use equipments and some electrical elements. Connect some electrical circuits. Identify, analyze and solve some basic problems in electrical circuits and electronics. Learn how to use basic circuit and electronic software. \n\t(This course for students in Mechanical, Industrial Engineering)\n"
+      },
+      {
+        "code_en": "LE241",
+        "code_th": "วฟ.241",
+        "name_en": "Basic Electronic Circuits and Devices",
+        "name_th": "อุปกรณ์และวงจรอิเล็กทรอนิกส์พื้นฐาน",
+        "credit": "3",
+        "prereq": [
+          "LE240"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "โครงสร้าง คุณลักษณะ และโหมดของการทำงานของไดโอด วงจรประยุกต์ของไดโอด วงจรแหล่งจ่ายไฟกระแสตรง โครงสร้าง คุณลักษณะ และโหมดของการทำงานของทรานซิสเตอร์แบบ BJT และ FET ทรานซิสเตอร์ในวงจรขยายสัญญาณ และสวิตช์ การไบแอสทรานซิสเตอร์ หลักการวิเคราะห์วงจรสัญญาณขนาดเล็ก แบบจำลองอุปกรณ์แบบ 2 และ 3 ขา ออปแอมป์และวงจรประยุกต์",
+        "description_en": "Diode: physical structure, characteristics and modes of operation; diode application circuits; DC power supply amplifiers; BJT and FET physical structure, characteristics and modes of operation; use as an amplifier and a switch; biasing; principle of small-signal analysis; models for 2 - and 3 -terminal devices; operational amplifier and its applications in linear and nonlinear circuits."
+      },
+      {
+        "code_en": "CN361",
+        "code_th": "วพ.361",
+        "name_en": "Microprocessor Systems Design",
+        "name_th": "การออกแบบระบบไมโครโปรเซสเซอร์",
+        "credit": "3",
+        "prereq": [
+          "LE242"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "พื้นฐานของไมโครโปรเซสเซอร์และไมโครคอนโทรลเลอร์ ภาษาแอสเซมบลี การเชื่อมต่ออุปกรณ์ต่อพ่วง การใช้ภาษา C และอินเทอร์รัพท์",
+        "description_en": "Microprocessor fundamentals, processor architecture, memory interface, assembly and C programming, peripheral interfacing."
+      },
+      {
+        "code_en": "CN200",
+        "code_th": "วพ.200",
+        "name_en": "Discrete Mathematics",
+        "name_th": "คณิตศาสตร์แบบไม่ต่อเนื่อง",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.2.1",
+        "tabee": "A1",
+        "description_th": "ความรู้พื้นฐานเกี่ยวกับคณิตศาสตร์แบบไม่ต่อเนื่องและการประยุกต์ในวิทยาการคอมพิวเตอร์",
+        "description_en": "Basic knowledge of discrete mathematics and its applications in computer science."
+      },
+      {
+        "code_en": "SF211",
+        "code_th": "วซ.211",
+        "name_en": "Object-oriented programming",
+        "name_th": "การโปรแกรมเชิงวัตถุ",
+        "credit": "3",
+        "prereq": [
+          "CN101"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "วซ.211\t\t\tการโปรแกรมเชิงวัตถุ\t\t\t\t\t\t\t3 (3-0-6)\nSF211  \t\t\tObject-oriented programming\n\t\t\t\tวิชาบังคับก่อน: สอบได้ วพ.101\n\t\t\t\tแนะนำการเขียนโปรแกรมเชิงวัตถุ ประกอบด้วย คลาส อ็อบเจกต์ การห่อหุ้ม การรับทอด ภาวะพหุสัณฐาน และการกำหนดสาระสำคัญ\t\n\t\t\t\t\n",
+        "description_en": "Prerequisite : Have earned credits of  CN 101\n\t\t\t\tIntroduction to object-oriented programming. Class, Object, Encapsulation, Inheritance, Polymorphism, and Abstraction."
+      }
+    ],
+    "y2_t3": [
+      {
+        "code_en": "LE260",
+        "code_th": "วฟ.260",
+        "name_en": "Electrical Machines I",
+        "name_th": "เครื่องจักรกลไฟฟ้า 1",
+        "credit": "3",
+        "prereq": [
+          "LE240"
+        ],
+        "category": "",
+        "tabee": "",
+        "description_th": "วฟ.260 เครื่องจักรกลไฟฟ้า 1 3 (3-0-6)\nLE260 Electrical Machines I\nวิชาบังคับก่อน : สอบได้ วฟ.240\nแหล่งต้นพลังงาน วงจรแม่เหล็ก หลักการแปลงพลังงานกลไฟฟ้า พลังงานและพลังงานร่วม\nโครงสร้างและหลักการของเครื่องจักรกลชนิดหมุนของเครื่องจักรกลกระแสตรง และประสิทธิภาพ หลักการ\nและประสิทธิภาพของหม้อแปลงไฟฟ้าหนึ่งเฟส หม้อแปลงไฟฟ้าสามเฟส\n",
+        "description_en": "Prerequisite : Have earned credits of LE240\nEnergy sources, magnetic circuits, electromechanical energy conversion, energy\nand co-energy, construction of rotating machines, principle of DC rotating machines and\ntheir efficiencies, principle of single-phase and three-phase transformers and their\nefficiencies."
+      }
+    ],
+    "y3_t1": [
+      {
+        "code_en": "EI310",
+        "code_th": "อฟ.310",
+        "name_en": "Electrical Instruments, Electrical Measurements and Sensors",
+        "name_th": "เครื่องมือวัดทางไฟฟ้า การวัดทางไฟฟ้า และเซนเซอร์",
+        "credit": "3",
+        "prereq": [
+          "LE240"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "อฟ.310 \t\tเครื่องมือวัดทางไฟฟ้า การวัดทางไฟฟ้า และเซนเซอร์\t\t\t\t3 (3-0-6)\nEI310 \t\t\tElectrical Instruments, Electrical measurements and Sensors\n\t\t\t\tวิชาบังคับก่อน : สอบได้ วฟ.240 \nหน่วยและมาตรฐานการวัดทางไฟฟ้า การจำแนกและลักษณะเฉพาะของเครื่องมือวัด การวิเคราะห์การวัด การวัดกระแสและแรงดันแบบกระแสตรงและกระแสสลับโดยใช้เครื่องมือวัดแบบแอนะล็อกและแบบดิจิทัล การวัดค่าทางไฟฟ้า การปรับเทียบมาตรฐาน หลักการและการประยุกต์ใช้งานของเซนเซอร์ชนิดต่างๆในการวัด เช่น ลิมิตสวิตช์ โฟโต้เซนเซอร์ เซนเซอร์ตรวจจับบริเวณใกล้เคียง อัลตราโซนิคเซนเซอร์ เซนเซอร์ตรวจวัดอุณหภูมิ เซนเซอร์ตรวจวัดความดัน เซนเซอร์ตรวจวัดการไหล เซนเซอร์ตรวจวัดน้ำหนัก เซนเซอร์ตรวจวัดระยะการเคลื่อนที่ และเอ็นโคดเดอร์\n",
+        "description_en": "\t\t\t\tPrerequisite : Have earned credits of LE240 \n\t\t\t\tUnits and standards of electrical measurements; Instrument classifications and characteristics; Measurement Analysis; Measurement of DC and AC current and voltage using analog and digital instruments; Electrical measurement; Calibration; Principles and applications of industrial sensors including limit switches; photo sensors, proximity sensors, ultrasonic sensors, temperature sensors, pressure sensors, flow sensors, weight sensors, displacement sensors and encoders\n"
+      },
+      {
+        "code_en": "CN391",
+        "code_th": "วพ.391",
+        "name_en": "Computer Architecture and Operating System",
+        "name_th": "สถาปัตยกรรมคอมพิวเตอร์ และระบบปฏิบัติการ",
+        "credit": "3",
+        "prereq": [
+          "LE211"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "วพ.391\t\t\tสถาปัตยกรรมคอมพิวเตอร์ และระบบปฏิบัติการ\t\t\t\t3 (3-0-6)\nCN391 \t\t\tComputer Architecture and Operating System\t\n\t\t\t\tครอบคลุมพื้นฐานของสถาปัตยกรรมคอมพิวเตอร์ และระบบปฏิบัติการ ประกอบด้วย การ\nทำงานของ CPU และการควบคุม การจัดสรรเวลา CPU การบริหารจัดการหน่วยความจำ รวมถึงระบบแคช และหน่วยความจำเสมือน เทคโนโลยีฮาร์ดดิสก์ และระบบอินพุต-เอาต์พุต\n",
+        "description_en": "\t\t\t\tThis course will cover the basic concepts of Computer Architecture and Operating System including the CPU control and datapath, CPU scheduling, memory systems including caching and virtual memory, hard disk technologies and input/output subsystems.\n"
+      },
+      {
+        "code_en": "CN240",
+        "code_th": "วพ.240",
+        "name_en": "Data Science for Signal Processing",
+        "name_th": "วิทยาศาสตร์ข้อมูลสำหรับการประมวลผลสัญญาณ",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "การวิเคราะห์ จำแนก และตรวจจับข้อมูลในรูปแบบต่าง ๆ เช่น ตัวหนังสือ เสียง รูปภาพ วิดีโอ ด้วยเทคนิค data science และ machine learning",
+        "description_en": "Methods to analyze, classify, and detect signals in real-world formats such as text, speech, images, videos; includes feature extraction, pattern recognition, and machine learning applications."
+      },
+      {
+        "code_en": "LELAB",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "1",
+        "prereq": [],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "",
+        "description_en": ""
+      },
+      {
+        "code_en": "LE326",
+        "code_th": "วฟ.326",
+        "name_en": "Analog and Digital Communications",
+        "name_th": "การสื่อสารแอนะล็อกและดิจิทัล",
+        "credit": "3",
+        "prereq": [
+          "LE210"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "วฟ.326 \tการสื่อสารแอนะล็อกและดิจิทัล\t\t\t\t\t\t3 (3-0-6)\nLE326\tAnalog and Digital Communications\n\t\tวิชาบังคับก่อน: สอบได้ วฟ.210 \n\t\tพื้นฐานโทรคมนาคม, การกระจายสัญญาณในอากาศว่าง, การประยุกต์ใช้อนุกรมฟูเรียร์และการแปลงฟูเรียร์, การวิเคราะห์สเปกตรัม, สัญญาณสุ่ม การมอดูเลตแบบแอนะล็อก (AM, DSB, SSB, VSB, FM และ PM) เครื่องรับ การวิเคราะห์ความผิดพลาดและการวิเคราะห์สัญญาณรบกวน การแปลงสัญญาณเป็นดิจิทัล, การชักตัวอย่าง, การแบ่งนับ, PCM, DM; การส่งสัญญาณเบสแบนด์ (PAM, PWM, PPM และ รหัสสายสัญญาณ); การส่งสัญญาณแบนด์พาส (สัญญาณแบบไบนารีและแบบ M-ary, ASK, PSK, FSK, QPSK, QAM); การส่งสัญญาณร่วมสื่อ (FDM, TDM), การแทรกสอดระหว่างสัญลักษณ์และแผนภาพดวงตา; องค์ประกอบเครือข่ายโทรศัพท์พื้นฐานแบบแอนะล็อกและดิจิทัล, พื้นฐานการสื่อสารผ่านดาวเทียม\n\t\n",
+        "description_en": "\tPrerequisite: Have earned credits of LE210\n\t\tFundamentals of telecommunication, free space propagation characteristics; applications of Fourier Series and Fourier transform, spectrum analysis, random signals; continuous wave modulation (AM, DSB, SSB, VSB, FM, and PM), receivers, error and noise analysis; digitization, sampling, quantization, PCM, DM; baseband transmission (PAM, PWM, PPM, and line coding); passband transmission (binary and M-ary signaling ASK, PSK, FSK, QPSK, QAM); multiplexing techniques (FDM, TDM), inter-symbol interference and eye diagrams; analog and digital PSTN, fundamentals of satellite communication."
+      },
+      {
+        "code_en": "CN330",
+        "code_th": "วพ.330",
+        "name_en": "Computer Application Development",
+        "name_th": "การพัฒนาโปรแกรมคอมพิวเตอร์ประยุกต์",
+        "credit": "3",
+        "prereq": [
+          "CN101"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "การพัฒนาโปรแกรมคอมพิวเตอร์ประยุกต์ เช่น ส่วนติดต่อผู้ใช้ การเชื่อมต่ออุปกรณ์ฮาร์ดแวร์ และโปรแกรมระบบเครือข่าย",
+        "description_en": "Develop application programs including user interfaces, hardware interfaces, and network programs."
+      },
+      {
+        "code_en": "SF231",
+        "code_th": "วซ.231\t",
+        "name_en": "โครงสร้างข้อมูลและขั้นตอนวิธี \t",
+        "name_th": "Data Structures and Algorithms ",
+        "credit": "3",
+        "prereq": [
+          "SF211"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "วซ.231\t\t\tโครงสร้างข้อมูลและขั้นตอนวิธี \t\t\t\t\t\t3 (3-0-6)\nSF231\t\t\tData Structures and Algorithms \n\t\t\t\tวิชาบังคับก่อน  :  สอบได้ วซ.211  \n\t\t\t\tความรู้เบื้องต้นเกี่ยวกับโครงสร้างข้อมูลและขั้นตอนวิธี การวิเคราะห์ความซับซ้อนของขั้นตอนวิธีที่ใช้ในการแก้ปัญหา การเก็บข้อมูลด้วยแถวลำดับและรายการโยง กองซ้อน แถวคอย แถวคอยเชิงบุริมภาพ ฮีพ ต้นไม้แบบทวิภาค ต้นไม้ค้นหาแบบทวิภาค ต้นไม้เอวีแอล ต้นไม้ค้นหาแบบอื่น ๆ ตารางแฮช การเรียงลำดับข้อมูล กราฟ กลวิธีของการออกแบบขั้นตอนวิธี การแก้โจทย์ปัญหาที่เกี่ยวข้องกับโครงสร้างข้อมูลและขั้นตอนวิธี และการเข้าร่วมแข่งขันเขียนโปรแกรม\n\t\t\t\t",
+        "description_en": "Prerequisite : Have earned credits of SF211\n\t\t\t\tIntroduction to data structures and algorithms, algorithm analysis, arrays and linked lists, stacks, queues, priority queues, heaps, binary trees, binary search trees, AVL trees, other variations in trees, hashing, sorting, graph algorithms, algorithm design techniques, online judges and algorithm competitions.\n"
+      }
+    ],
+    "y3_t2": [
+      {
+        "code_en": "CN392",
+        "code_th": "วพ.392\t",
+        "name_en": "Cloud Computing and Application Development",
+        "name_th": "ระบบประมวลผลแบบกลุ่มเมฆและการพัฒนาโปรแกรมประยุกต์",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "วพ.392\t\t\tระบบประมวลผลแบบกลุ่มเมฆและการพัฒนาโปรแกรมประยุกต์\t\t3 (3-0-6)\nCN392\t\t\tCloud Computing and Application Development\n\t\t\t\tครอบคลุมเทคโนโลยีที่เกี่ยวข้องกับการประมวลผลแบบกลุ่มเมฆ การใช้งานระบบการประมวลผลแบบสาธารณะ อาทิ Amazon EC2, Microsoft Azure หรือ Google Cloud Platform การเลือกใช้ การสร้าง และบริหารจัดการคอมพิวเตอร์เสมือน มีความเข้าใจการบริหารจัดการระบบเครือข่าย ระบบความปลอดภัย ระบบจัดเก็บข้อมูล ระบบฐานข้อมูล การประยุกต์ใช้ และการพัฒนาโปรแกรมประยุกต์บนระบบการประมวลผลแบบกลุ่มเมฆ  และระบบอื่นที่เกี่ยวข้อง\n\t\t\t\t\n",
+        "description_en": "Technology related to Cloud Computing. Explore solutions for public Cloud \ncomputing such as Amazon EC2, Microsoft Azure or Google Cloud Platform. Topics include Cloud instance selection, instance creation and management. Understanding Network management, Cloud Security, Data storage, Databases and application development. Deployed application on Cloud and related systems."
+      },
+      {
+        "code_en": "LE324",
+        "code_th": "วฟ.324",
+        "name_en": "Data Communication and Networks",
+        "name_th": "การสื่อสารข้อมูลและเครือข่ายข้อมูล",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "แนะนำระบบเครือข่ายสื่อสารข้อมูล สถาปัตยกรรมเครือข่ายแบบเป็นชั้น โพรโทคอลแบบจุดถึงจุด การควบคุมการเข้าถึงตัวกลาง การควบคุมการไหลของกลุ่มข้อมูล การควบคุมความผิดพลาด เครือข่ายเฉพาะที่ การจัดเส้นทางในเครือข่าย ความมั่นคงของเครือข่าย ระบบเครือข่ายแบบกลุ่มเมฆ มาตรฐานการสื่อสาร",
+        "description_en": "Introduction to data communications and networks; layered network architecture; point-to-point protocols and links; delay models in data networks; medium access control; flow control; error control; local area network; switching network; routing in data network; network security, cloud network, architecture and system; standards."
+      },
+      {
+        "code_en": "EI446",
+        "code_th": "อฟ.446",
+        "name_en": "IOT System Design in Industry",
+        "name_th": "การออกแบบระบบ IOT ในอุตสาหกรรม",
+        "credit": "3",
+        "prereq": [
+          "CN361"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "อฟ.446\t\t\tการออกแบบระบบ IoT ในอุตสาหกรรม \t\t\t\t\t3 (3-0-6)\nEI446\t\t\tIOT System Design in Industry\t\n\t\t\t\tวิชาบังคับก่อน : สอบได้ อฟ.201 (สำหรับหลักสูตรวิศวกรรมศาสตรบัณฑิต หลักสูตรนานาชาติ สาขาวิชาวิศวกรรมไฟฟ้า สอบได้ วฟ.210)\n\t\t\t\tสถาปัตยกรรมไมโครโปรเซสเซอร์ การเชื่อมหน่วยความจำและ อินพุต เอาพุต การสื่อสารแบบอนุกรม วงจรจับเวลาและการขัดจังหวะ การเขียนโปรแกรมแบบหลายเทรด แนะนำการสื่อสารผ่านอินเตอร์เน็ต โปรโตคอลสำหรับอินเตอร์เน็ตสำหรับสรรพสิ่ง โปรโตคอล MQTT coap การสื่อสารระหว่างอินเตอร์เน็ตสำหรับสรรพสิ่งและโครงข่ายแบบกลุ่มเมฆ การประมวลผลที่ขอบ การประยุกต์ใช้งานอินเตอร์เน็ตสำหรับสรรพสิ่ง ในระบบอุตสาหกรรมอัตโนมัติ\n\t\t\t\t",
+        "description_en": "Prerequisite : Have earned credits of EI201 (Students in Electrical engineering program (International Program must have earned credits of LE210)\n\t\t\t\tMicroprocessors architecture, memory and input output interfaces, serial communications, timer and interrupts, multiple threads programming, introduction to internet communication, protocols for internet of things, MQTT, coap, IoT and cloud communication, edge computing, applications of microprocessor and internet of things in industrial automation.\n"
+      },
+      {
+        "code_en": "CN230",
+        "code_th": "วพ.230",
+        "name_en": "Database Systems",
+        "name_th": "ระบบฐานข้อมูล",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "แนวคิดเบื้องต้นเกี่ยวกับระบบฐานข้อมูล ระบบจัดการฐานข้อมูล การออกแบบฐานข้อมูลแบบ ER Model และ Relational Model",
+        "description_en": "Introduction to database systems, database management systems, ER model, relational model."
+      },
+      {
+        "code_en": "EI412",
+        "code_th": "อฟ.412",
+        "name_en": "Machine Vision and Application in Industry",
+        "name_th": "การเห็นภาพในเครื่องจักรอัตโนมัติและการประยุกต์ในอุตสาหกรรม",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "อฟ.412 \t\tการเห็นภาพในเครื่องจักรอัตโนมัติและการประยุกต์ในอุตสาหกรรม\t\t 3 (3-0-6)\nEI412 \t\t\tMachine Vision and Application in Industry\n\t\t\t\tการรับและวิเคราะห์ข้อมูลรูปภาพของคอมพิวเตอร์  โดยเน้นที่วิธีการที่จะนำไปสู่การพัฒนาระบบการมองของหุ่นยนต์ การสร้างรูปภาพและการรับรู้รูปภาพ  การแบ่งรูปภาพ การตรวจหาขอบวัตถุ การค้นหารูปร่าง การรู้จำรูปแบบ การประยุกต์ใช้งานระบบการเห็นภาพของเครื่องจักรอัตโนมัติในกระบวนการประกอบชิ้นส่วนและการตรวจสอบในอุตสาหกรรม รายวิชานี้เน้นการจัดการเรียนรู้แบบใช้โครงงานเป็นฐาน \n\t\t\t\t",
+        "description_en": "Computer acquisition and analysis of image data with emphasis on techniques for robot vision. Image formation and image sensing. Image segmentation. Edge detection. Shape finding. Pattern Recognition. Automated machine vision applied to assembly and inspection tasks in industry. This course is conducted using project-based learning approach. \n"
+      },
+      {
+        "code_en": "CN340",
+        "code_th": "วพ.340 ",
+        "name_en": "Machine Learning",
+        "name_th": "การเรียนรู้ของเครื่อง",
+        "credit": "3",
+        "prereq": [
+          "CN240"
+        ],
+        "category": "2.2.1",
+        "tabee": "",
+        "description_th": "วพ.340 \t\t\tการเรียนรู้ของเครื่อง\t\t\t\t\t\t\t\t3 (3-0-6)\nCN340 \t\t\tMachine Learning\n\t\t\t\tวิชาบังคับก่อน  :  สอบได้ วพ.240\n\t\t\t\tการเรียนรู้ของเครื่องเกี่ยวข้องกับการพัฒนาและการใช้งานของขั้นตอนวิธีแบบปรับตัวได้โดยเอาข้อมูลตัวอย่างหรือประสบการณ์ในอดีตมาใช้ในการแก้ปัญหา กล่าวคือ สร้างระบบคอมพิวเตอร์ให้สามารถเรียนรู้จากประสบการณ์ วิชานี้จะแนะนำการเรียนรู้ของเครื่องและการรู้จำรูปแบบเชิงสถิติ หัวข้อประกอบด้วยการเรียนรู้แบบกำกับดูแล (การเรียนรู้แบบกาเนิด/แบ่งแยก การเรียนรู้แบบทราบและไม่ทราบพารามิเตอร์ โครงข่ายประสาทเทียม ซัพพอร์ตเวกเตอร์แมชชีน การเรียนรู้เชิงลึก) การเรียนรู้แบบไม่กำกับดูแล (การแบ่งกลุ่ม การลดมิติ) วิชานี้ยังกล่าวถึงการนำการเรียนรู้ของเครื่องไปใช้งานในปัจจุบัน เช่น การควบคุมหุ่นยนต์ การทำเหมืองข้อมูล การควบคุมรถยนต์แบบไร้คนขับ ชีวสารสนเทศ การรู้จำเสียงพูด การประมวลผลข้อความและข้อมูลเว็บ\n\t\t\t\t",
+        "description_en": "Prerequisite : Have earned credits of  CN240 \n\t\t\t\tMachine learning is concerned with the development and application of adaptive algorithms that use example data or previous experience to solve a given problem, i.e., build computer systems that learn from experience. This course provides a broad introduction to machine learning and statistical pattern recognition. Topics include: supervised learning (generative/discriminative learning, parametric/non-parametric learning, neural networks, support vector machines, deep learning); unsupervised learning (clustering, dimensionality reduction). The course will also discuss recent applications of machine learning, such as to robotic control, data mining, autonomous navigation, bioinformatics, speech recognition, and text and web data processing.\n"
+      },
+      {
+        "code_en": "CAPSTONE1",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "1",
+        "prereq": [],
+        "category": "2.2.2",
+        "tabee": "A3",
+        "description_th": "",
+        "description_en": ""
+      }
+    ],
+    "y3_t3": [
+      {
+        "code_en": "TSE300",
+        "code_th": "วศว.300 ",
+        "name_en": "Electrical and Data Engineering Training",
+        "name_th": "ฝึกงานทางวิศวกรรมไฟฟ้าและข้อมูล",
+        "credit": "1",
+        "prereq": [],
+        "category": "2.2.1",
+        "tabee": "A2",
+        "description_th": "วศว.300 \tฝึกงานทางวิศวกรรมไฟฟ้าและข้อมูล\t    1 (ฝึกงานไม่น้อยกว่า 240 ชม. ต่อภาคการศึกษา)\nTSE300\tElectrical and Data Engineering Training\n\tวิชาบังคับก่อน: สอบได้วิชาเฉพาะด้านไม่น้อยกว่า 45 หน่วยกิต\n\t\n",
+        "description_en": "Prerequisite:  Have earned at least 45 credits of Major Courses\n\tStudents must be trained at least six consecutive weeks (not less than 240 \nhours) in industries or similar sectors. Submissions of reports are required together with comments or certifications from the trainers. This course cannot be registered concurrently with other courses."
+      }
+    ],
+    "y4_t1": [
+      {
+        "code_en": "CAPSTONE2",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "2",
+        "prereq": [
+          "CAPSTONE1"
+        ],
+        "category": "2.2.2",
+        "tabee": "A3",
+        "description_th": "",
+        "description_en": ""
+      },
+      {
+        "code_en": "LExxx",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "3",
+        "prereq": [],
+        "category": "2.2.2",
+        "tabee": "",
+        "description_th": "",
+        "description_en": ""
+      },
+      {
+        "code_en": "FREE2",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "3",
+        "prereq": [],
+        "category": "3",
+        "tabee": "",
+        "description_th": "",
+        "description_en": ""
+      },
+      {
+        "code_en": "FREE1",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "3",
+        "prereq": [],
+        "category": "3",
+        "tabee": "",
+        "description_th": "",
+        "description_en": ""
+      }
+    ],
+    "y4_t2": [
+      {
+        "code_en": "(OPT1) LONGINTERN",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "6",
+        "prereq": [],
+        "category": "2.2.2",
+        "tabee": "A4",
+        "description_th": "",
+        "description_en": ""
+      },
+      {
+        "code_en": "(OPT2) EXCHANGE1",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "3",
+        "prereq": [],
+        "category": "",
+        "tabee": "",
+        "description_th": "",
+        "description_en": ""
+      },
+      {
+        "code_en": "(OPT2) EXCHANGE2",
+        "code_th": "",
+        "name_en": "",
+        "name_th": "",
+        "credit": "3",
+        "prereq": [],
+        "category": "",
+        "tabee": "",
+        "description_th": "",
+        "description_en": ""
+      }
+    ],
+    "y4_t3": []
+  },
+  "categories": [
+    {
+      "id": "1",
+      "code": "1",
+      "name": "วิชาศึกษาทั่วไป",
+      "children": [
+        {
+          "id": "1.1",
+          "code": "1.1",
+          "name": "วิชาศึกษาทั่วไปส่วนของ มธ",
+          "children": [
+            {
+              "id": "1.1.1",
+              "code": "1.1.1",
+              "name": "หมวดที่ 1 วิทยาศาสตร์ เทคโนโลยีสารสนเทศ",
+              "children": [],
+              "description": "",
+              "color": "#f41f3f"
+            },
+            {
+              "id": "1751553519203",
+              "code": "1.1.2",
+              "name": "หมวดที่ 2 การพัฒนาตนเอง",
+              "children": [],
+              "description": "",
+              "color": "#f41f1f"
+            },
+            {
+              "id": "1751553543919",
+              "code": "1.1.3",
+              "name": "การคิดวิเคราะห์ การคิดเชิงสร้างสรรค์และการสื่อสาร",
+              "children": [],
+              "description": "",
+              "color": "#f41f1f"
+            },
+            {
+              "id": "1751553574035",
+              "code": "1.1.4",
+              "name": "หมวดที่ 4 การเป็นผู้นำ และการเป็นพลเมืองที่ดี",
+              "children": [],
+              "description": "",
+              "color": "#f41f1f"
+            }
+          ],
+          "description": "",
+          "color": "#2196f3"
+        },
+        {
+          "id": "1751552640683",
+          "code": "1.2",
+          "name": "วิชาศึกษาทั่วไปของคณะ",
+          "children": [],
+          "description": "",
+          "color": "#1ff46a"
+        }
+      ],
+      "description": "",
+      "color": "#2196f3"
+    },
+    {
+      "id": "1751553824203",
+      "code": "2",
+      "name": "วิชาเฉพาะ",
+      "children": [
+        {
+          "id": "1751554172759",
+          "code": "2.1",
+          "name": "วิชาเฉพาะพื้นฐาน",
+          "children": [
+            {
+              "id": "1751554256630",
+              "code": "2.1.1",
+              "name": "พื้นฐานทางคณิตศาสตร์และวิทยาศาสตร์",
+              "children": [],
+              "description": "",
+              "color": "#2196f3"
+            },
+            {
+              "id": "1751554315979",
+              "code": "2.1.2",
+              "name": "พื้นฐานทางวิศวกรรม",
+              "children": [],
+              "description": "",
+              "color": "#7f1ff4"
+            }
+          ],
+          "description": "",
+          "color": "#2196f3"
+        },
+        {
+          "id": "1751554350511",
+          "code": "2.2",
+          "name": "วิชาเฉพาะด้าน",
+          "children": [
+            {
+              "id": "1751554361342",
+              "code": "2.2.1",
+              "name": "วิชาบังคับ",
+              "children": [],
+              "description": "",
+              "color": "#1fcaf4"
+            },
+            {
+              "id": "1751554378209",
+              "code": "2.2.2",
+              "name": "วิชาเลือก",
+              "children": [],
+              "description": "",
+              "color": "#2196f3"
+            }
+          ],
+          "description": "",
+          "color": "#2196f3"
+        }
+      ],
+      "description": "",
+      "color": "#2196f3"
+    },
+    {
+      "id": "1751554422207",
+      "code": "3",
+      "name": "เลือกเสรี",
+      "children": [],
+      "description": "",
+      "color": "#2196f3"
+    }
+  ],
+  "tabeeTree": [
+    {
+      "id": "A",
+      "code": "A1",
+      "name": "พื้นฐานคณิตวิทย์",
+      "description": "ตัวอย่างหมวด TABEE",
+      "color": "#a24457",
+      "children": []
+    },
+    {
+      "id": "1751557930374",
+      "code": "A2",
+      "name": "ฝึกงาน",
+      "description": "",
+      "color": "#11e0ee",
+      "children": []
+    },
+    {
+      "id": "1751557955925",
+      "code": "A3",
+      "name": "CAPSTONE",
+      "description": "",
+      "color": "#a29f44",
+      "children": []
+    },
+    {
+      "id": "1751557968039",
+      "code": "A4",
+      "name": "สหกิจ",
+      "description": "",
+      "color": "#43a047",
+      "children": []
+    }
+  ]
+}
+curriculum_data (13).json
+External
+
+Shared externally dialog. This document is shared with people outside your organization. Be cautious about sharing sensitive information.
